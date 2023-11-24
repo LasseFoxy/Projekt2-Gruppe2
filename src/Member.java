@@ -48,13 +48,12 @@ class Member {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = birthDate.format(formatter);
 
-        return  "Indtastede data: " +
+        return  "Medlems ID: " + memberID +
                 "\nFornavn: " + firstName +
                 "\nEfternavn: " + lastName +
                 "\nFødselsdato: " + formattedDate +
                 "\nTelefonnummer: " + phoneNumber +
-                "\nEmail: " + email +
-                "\nMedlems ID: " + memberID;
+                "\nEmail: " + email;
     }
 }
 
@@ -73,7 +72,7 @@ class Trainer extends Member {
     @Override
     public String toString() {
         return super.toString() +
-                "\nStilling: " + position;
+                "\nStilling: " + position + "\n";
     }
 }
 
@@ -98,6 +97,6 @@ class Swimmer extends Member {
     public String toString() {
         return super.toString() +
                 "\nMedlemstype: " + memberType +
-                "\nAktivitetstype: " + activityType;
+                "\nAktivitetstype: " + activityType + "\n";
     }
 }

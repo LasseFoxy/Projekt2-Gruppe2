@@ -16,10 +16,8 @@ public class Menu {
                 System.out.println("Medlemmer:");
                 System.out.println("1. Opret svømmer");
                 System.out.println("2. Opret træner");
-                System.out.println("3. Rediger medlem (MANGLER)");
-                System.out.println("4. Vis medlem (MANGLER)");
-                System.out.println("5. Slet medlem (MANGLER)");
-                System.out.println("6. Tilbage til hovedmenu");
+                System.out.println("3. Håndter medlem (Vis/slet/rediger)");
+                System.out.println("4. Tilbage til hovedmenu");
         }
 
         public void runMenu() {
@@ -60,7 +58,7 @@ public class Menu {
                                         memberManagement.createTrainer();
                                         break;
                                 case "3":
-                                        //editMember();
+                                        memberManagement.handleMember();
                                         break;
                                 case "4":
                                         //displayMember();

@@ -2,7 +2,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
 public class MemberManagement {
 
     private Scanner scanner = new Scanner(System.in);
@@ -49,13 +48,14 @@ public class MemberManagement {
 
         if (confirmation == 1) {
             int memberID = findFirstAvailableMemberID();
-            Swimmer swimmer = new Swimmer(firstName, lastName, birthDate, phoneNumber, email, memberID, memberType, activityType);
+            Swimmer swimmer = new Swimmer(firstName, lastName, birthDate, phoneNumber, email, memberID, memberType,
+                    activityType);
             membersList.add(swimmer);
             System.out.println(swimmer);
-            System.out.println(firstName+" "+lastName+" tilføjet som Svømmer med Medlems ID: "+ swimmer.getMemberID());
-        }
-        else {
-                System.out.println("Oprettelse annulleret.");
+            System.out.println(
+                    firstName + " " + lastName + " tilføjet som Svømmer med Medlems ID: " + swimmer.getMemberID());
+        } else {
+            System.out.println("Oprettelse annulleret.");
         }
     }
 
@@ -77,8 +77,6 @@ public class MemberManagement {
         scanner.nextLine();
         String position = positionChoice == 1 ? "Junior Træner" : "Senior Træner";
 
-
-
         // Viser indtastede data
         System.out.println("\nIndtastede data:");
         System.out.println("Fornavn: " + firstName);
@@ -97,7 +95,8 @@ public class MemberManagement {
             Trainer trainer = new Trainer(firstName, lastName, birthDate, phoneNumber, email, memberID, position);
             membersList.add(trainer);
             System.out.println(trainer);
-            System.out.println(firstName + " " + lastName + " tilføjet som Træner med Medlems ID: " + trainer.getMemberID());
+            System.out.println(
+                    firstName + " " + lastName + " tilføjet som Træner med Medlems ID: " + trainer.getMemberID());
         } else {
             System.out.println("Oprettelse annulleret.");
         }
@@ -118,6 +117,35 @@ public class MemberManagement {
                 return memberID;
             }
             memberID++;
+        }
+    }
+
+    public void createKontigentBetaling() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Indtast alder: ");
+        int age = scanner.nextInt();
+
+        System.out.println(" Aktiv ja/nej :");
+        boolean activestatus = scanner.next().equalsIgnoreCase("ja");
+
+        Member member = new Member(activestatus, age);
+        int kontigent = member.kontingentberegning();
+
+        System.out.println("Kontingentet er:" + kontigent + "kr. årligt");
+
+        // System.out.print("\nTryk 1 for at bekræfte eller 2 for at annullere: ");
+        int confirmation = scanner.nextInt();
+        // scanner.nextLine();
+
+        if (confirmation == 1) {
+            // KontigentBetaling kontigentBetaling = new KontigentBetaling(memberID,
+            // kontigentbeloeb, payed);
+            // System.out.println(kontigentBetaling);
+            // System.out.println("Kontigentoplysninger tilføjet til Medlems ID: " +
+            // kontigentBetaling.getMemberID());
+        } else {
+            System.out.println("Oprettelse annulleret.");
         }
     }
 }

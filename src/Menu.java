@@ -16,13 +16,8 @@ public class Menu {
                 System.out.println("Medlemmer:");
                 System.out.println("1. Opret svømmer");
                 System.out.println("2. Opret træner");
-                System.out.println("3. Opret kontigentoplysninger.");
-                System.out.println("4. Marker betalte/ubetalte kontigenter (MANGLER)");
-                System.out.println("5. Lav menu til at se kontigent info (MANGLER)");
-                System.out.println("6. Rediger medlem (MANGLER)");
-                System.out.println("7. Vis medlem (MANGLER)");
-                System.out.println("8. Slet medlem (MANGLER)");
-                System.out.println("9. Tilbage til hovedmenu");
+                System.out.println("3. Håndter medlem (Vis/slet/rediger)");
+                System.out.println("4. Tilbage til hovedmenu");
         }
 
         public void runMenu() {
@@ -63,13 +58,13 @@ public class Menu {
                                         memberManagement.createTrainer();
                                         break;
                                 case "3":
-                                        memberManagement.createKontigentBetaling();
+                                        memberManagement.handleMember();
                                         break;
                                 case "4":
-                                        // displayMember();
+                                        //displayMember();
                                         break;
                                 case "5":
-                                        // deleteMember();
+                                        //deleteMember();
                                         break;
                                 case "6":
                                         memberMenuRunning = false;

@@ -1,8 +1,20 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
         private Scanner scanner = new Scanner(System.in);
         private MemberManagement memberManagement = new MemberManagement(); // Tilføjer MemberManagement
+
+        private static ArrayList<Member> opretKontingentListe() {
+                ArrayList<Member> kontingentListe = new ArrayList<>();
+
+                // Eksempler på Memberer til listen
+                kontingentListe.add(new Member("Medlem1", 1000, false));
+                kontingentListe.add(new Member("Medlem2", 1600, false));
+                kontingentListe.add(new Member("Medlem3", 500, true));
+
+                return kontingentListe;
+        }
 
         public void displayMainMenu() {
                 System.out.println();
@@ -17,12 +29,11 @@ public class Menu {
                 System.out.println("1. Opret svømmer");
                 System.out.println("2. Opret træner");
                 System.out.println("3. Opret kontigentoplysninger.");
-                System.out.println("4. Marker betalte/ubetalte kontigenter (MANGLER)");
-                System.out.println("5. Lav menu til at se kontigent info (MANGLER)");
-                System.out.println("6. Rediger medlem (MANGLER)");
-                System.out.println("7. Vis medlem (MANGLER)");
-                System.out.println("8. Slet medlem (MANGLER)");
-                System.out.println("9. Tilbage til hovedmenu");
+                System.out.println("4. Vis alle medlemmer og kontingent info");
+                System.out.println("7. Rediger medlem (MANGLER)");
+                System.out.println("8. Vis medlem (MANGLER)");
+                System.out.println("9. Slet medlem (MANGLER)");
+                System.out.println("10. Tilbage til hovedmenu");
         }
 
         public void runMenu() {
@@ -66,7 +77,7 @@ public class Menu {
                                         memberManagement.createKontigentBetaling();
                                         break;
                                 case "4":
-                                        // displayMember();
+                                        MemberManagement.visKontingentMenu(opretKontingentListe());
                                         break;
                                 case "5":
                                         // deleteMember();

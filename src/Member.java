@@ -12,9 +12,13 @@ class Member {
     private int memberID; // ID
     private int age;
     private boolean activestatus;
+    private String medlemsNavn;
+    private double kontingentBelob;
+    private boolean erBetalt;
 
     // Constructor
-    public Member(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID) {
+    public Member(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email,
+            int memberID) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,6 +32,32 @@ class Member {
     public Member(boolean activestatus, int age) {
         this.age = age;
         this.activestatus = activestatus;
+    }
+
+    public Member(String medlemsNavn, double kontingentBelob, boolean erBetalt) {
+        this.medlemsNavn = medlemsNavn;
+        this.kontingentBelob = kontingentBelob;
+        this.erBetalt = erBetalt;
+    }
+
+    public String getMedlemsNavn() {
+        return medlemsNavn;
+    }
+
+    public double getKontingentBelob() {
+        return kontingentBelob;
+    }
+
+    public boolean erBetalt() {
+        return erBetalt;
+    }
+
+    public void markErBetalt() {
+        this.erBetalt = true;
+    }
+
+    public void markErUbetal() {
+        this.erBetalt = false;
     }
 
     public int kontingentberegning() {
@@ -114,9 +144,10 @@ class Member {
 class Trainer extends Member {
     private String position; // Juniortræner eller Seniortræner
 
-    public Trainer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID, String position) {
-    super(firstName, lastName, birthDate, phoneNumber, email, memberID);
-    this.position = position;
+    public Trainer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email,
+            int memberID, String position) {
+        super(firstName, lastName, birthDate, phoneNumber, email, memberID);
+        this.position = position;
     }
 
     // Getters og Setters for 'Position' (Stilling)
@@ -139,7 +170,8 @@ class Swimmer extends Member {
     private String memberType; // Aktiv eller Passiv
     private String activityType; // Konkurrencesvømmer eller Fritidssvømmer
 
-    public Swimmer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID, String memberType, String activityType) {
+    public Swimmer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email,
+            int memberID, String memberType, String activityType) {
 
         super(firstName, lastName, birthDate, phoneNumber, email, memberID);
         this.memberType = memberType;

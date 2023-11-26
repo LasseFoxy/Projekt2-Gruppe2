@@ -8,7 +8,6 @@ public class MemberManagement {
     private Scanner scanner = new Scanner(System.in);
     private ArrayList<Member> membersList = new ArrayList<>();
 
-
     // Metode til at oprette en svømmer
     public void createSwimmer() {
         System.out.print("Indtast fornavn: ");
@@ -73,10 +72,10 @@ public class MemberManagement {
                     activityType);
             membersList.add(swimmer);
 
-            System.out.println(firstName+" "+lastName+" tilføjet som Svømmer med Medlems ID: "+ swimmer.getMemberID());
-        }
-        else {
-                System.out.println("Oprettelse annulleret.");
+            System.out.println(
+                    firstName + " " + lastName + " tilføjet som Svømmer med Medlems ID: " + swimmer.getMemberID());
+        } else {
+            System.out.println("Oprettelse annulleret.");
         }
     }
 
@@ -135,8 +134,9 @@ public class MemberManagement {
             Trainer trainer = new Trainer(firstName, lastName, birthDate, phoneNumber, email, memberID, position);
             membersList.add(trainer);
 
-            System.out.println(firstName + " " + lastName + " tilføjet som Træner med Medlems ID: " + trainer.getMemberID());} 
-        else {
+            System.out.println(
+                    firstName + " " + lastName + " tilføjet som Træner med Medlems ID: " + trainer.getMemberID());
+        } else {
             System.out.println("Oprettelse annulleret.");
         }
     }
@@ -158,7 +158,6 @@ public class MemberManagement {
             memberID++;
         }
     }
-
 
     public void createKontigentBetaling() {
         Scanner scanner = new Scanner(System.in);
@@ -187,7 +186,72 @@ public class MemberManagement {
         } else {
             System.out.println("Oprettelse annulleret.");
 
-          
+        }
+    }
+
+    // Markér betalte/ubetalte kontingenter
+    private static void markerBetaling(ArrayList<Member> kontingentListe, String medlemsNavn,
+            boolean betalt) {
+        for (Member medlem : kontingentListe) {
+            if (medlem.getMedlemsNavn().equalsIgnoreCase(medlemsNavn)) {
+                if (betalt) {
+                    medlem.markErBetalt();
+                    System.out.println("Kontingent markeret som betalt for " + medlemsNavn);
+                } else {
+                    medlem.markErUbetal();
+                    System.out.println("Kontingent markeret som ubetalt for " + medlemsNavn);
+                }
+                return;
+            }
+        }
+        System.out.println("Medlem ikke fundet.");
+    }
+
+    public static void visKontingentMenu(ArrayList<Member> kontingentListe) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n*** KONTINGENTMENU ***");
+            System.out.println("1. Vis tilmeldete medlemmer og kontingent info");
+            System.out.println("2. Marker kontingent som betalt");
+            System.out.println("3. Marker kontingent som ubetalt");
+            System.out.println("4. Afslut programmet");
+
+            int valg = scanner.nextInt();
+
+            switch (valg) {
+                case 1:
+                    // Vis alle medlemmer og kontingent info
+                    for (Member medlem : kontingentListe) {
+                        System.out.println("Medlemsnavn: " + medlem.getMedlemsNavn());
+                        System.out.println("Kontingentbeløb: " + medlem.getKontingentBelob());
+                        System.out.println("Er betalt: " + medlem.erBetalt());
+                        System.out.println("------------------------");
+                    }
+                    break;
+                case 2:
+                    // Marker kontingent som betalt
+                    System.out.println("Indtast medlemsnavn for at markere kontingent som betalt:");
+                    String medlemsNavnBetalt = scanner.next();
+                    markerBetaling(kontingentListe, medlemsNavnBetalt, true);
+                    break;
+                case 3:
+                    // Marker kontingent som ubetalt
+                    System.out.println("Indtast medlemsnavn for at markere kontingent som ubetalt:");
+                    String medlemsNavnUbetal = scanner.next();
+                    markerBetaling(kontingentListe, medlemsNavnUbetal, false);
+                    break;
+                case 4:
+                    // Afslut programmet
+                    System.out.println("Programmet afsluttes.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Ugyldigt valg. Prøv igen.");
+            }
+        }
+    }
+
     public void handleMember() {
         System.out.print("Indtast søgekriterie (fornavn, efternavn, telefonnummer, medlemsID, e-mail): ");
         String searchCriteria = scanner.nextLine();
@@ -206,7 +270,8 @@ public class MemberManagement {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        if (choice == 0) return;
+        if (choice == 0)
+            return;
         if (choice < 1 || choice > foundMembers.size()) {
             System.out.println("Ugyldigt valg.");
             return;
@@ -345,5 +410,3 @@ public class MemberManagement {
         }
     }
 }
-
-

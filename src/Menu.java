@@ -1,14 +1,14 @@
 import java.util.Scanner;
 
 public class Menu {
-        private Scanner scanner = new Scanner(System.in);
-        private MemberManagement memberManagement = new MemberManagement(); // Tilføjer MemberManagement
+        private final Scanner scanner = new Scanner(System.in);
 
         public void displayMainMenu() {
                 System.out.println();
                 System.out.println("Hovedmenu:");
                 System.out.println("1. Medlemsskaber");
-                System.out.println("2. Afslut");
+                System.out.println("2. Økonomi");
+                System.out.println("3. Afslut");
         }
 
         public void displayMemberMenu() {
@@ -20,7 +20,16 @@ public class Menu {
                 System.out.println("4. Tilbage til hovedmenu");
         }
 
+        public void displayFinanceMenu() {
+                System.out.println();
+                System.out.println("Økonomi:");
+                System.out.println("1. Kommende betalinger");
+                System.out.println("2. Betalinger i restance");
+                System.out.println("3. Tilbage til hovedmenu");
+        }
+
         public void runMenu() {
+                SampleMember.initializeSampleMembers();
                 boolean running = true;
 
                 while (running) {
@@ -33,6 +42,9 @@ public class Menu {
                                         runMemberMenu();
                                         break;
                                 case "2":
+                                        runFinanceMenu();
+                                        break;
+                                case "3":
                                         running = false;
                                         break;
                                 default:
@@ -52,22 +64,45 @@ public class Menu {
 
                         switch (choice) {
                                 case "1":
-                                        memberManagement.createSwimmer();
+                                        MemberManagement.createSwimmer();
                                         break;
                                 case "2":
-                                        memberManagement.createTrainer();
+                                        MemberManagement.createTrainer();
                                         break;
                                 case "3":
-                                        memberManagement.handleMember();
+                                        MemberManagement.handleMember();
                                         break;
                                 case "4":
-                                        //displayMember();
-                                        break;
-                                case "5":
-                                        //deleteMember();
-                                        break;
-                                case "6":
                                         memberMenuRunning = false;
+                                        break;
+                                default:
+                                        System.out.println("Ugyldigt valg. Prøv igen.");
+                        }
+                }
+        }
+
+        private void runFinanceMenu() {
+                boolean financeMenuRunning = true;
+
+                while (financeMenuRunning) {
+                        displayFinanceMenu();
+                        System.out.print("Vælg en underkategori: ");
+                        String choice = scanner.nextLine();
+
+                        switch (choice) {
+                                case "1":
+                                        Payment.displayUpcomingPayments(Payment.paymentList);
+                                        break;
+                                case "2":
+                                        Payment.displayPaymentsOverdue();
+                                        break;
+
+                                case "3":
+                                        Payment.markAsPaidAndCreateNewPayment();
+                                        break;
+
+                                case "4":
+                                        financeMenuRunning = false;
                                         break;
                                 default:
                                         System.out.println("Ugyldigt valg. Prøv igen.");

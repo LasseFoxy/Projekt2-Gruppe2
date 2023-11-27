@@ -2,14 +2,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 // Medlemsklasse
-class Member {
+public class Member {
 
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
     private String phoneNumber;
     private String email;
-    private int memberID; // ID
+    private int memberID;
 
     // Constructor
     public Member(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID) {
@@ -19,10 +19,10 @@ class Member {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.memberID = memberID;
-
     }
 
     // Getters og Setters
+
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
 

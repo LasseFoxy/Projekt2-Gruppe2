@@ -1,14 +1,26 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
-        private final Scanner scanner = new Scanner(System.in);
+        private Scanner scanner = new Scanner(System.in);
+        private MemberManagement memberManagement = new MemberManagement(); // Tilføjer MemberManagement
+
+        private static ArrayList<Member> opretKontingentListe() {
+                ArrayList<Member> kontingentListe = new ArrayList<>();
+
+                // Eksempler på Memberer til listen
+                kontingentListe.add(new Member("Medlem1", 1000, false));
+                kontingentListe.add(new Member("Medlem2", 1600, false));
+                kontingentListe.add(new Member("Medlem3", 500, true));
+
+                return kontingentListe;
+        }
 
         public void displayMainMenu() {
                 System.out.println();
                 System.out.println("Hovedmenu:");
                 System.out.println("1. Medlemsskaber");
-                System.out.println("2. Økonomi");
-                System.out.println("3. Afslut");
+                System.out.println("2. Afslut");
         }
 
         public void displayMemberMenu() {
@@ -16,20 +28,15 @@ public class Menu {
                 System.out.println("Medlemmer:");
                 System.out.println("1. Opret svømmer");
                 System.out.println("2. Opret træner");
-                System.out.println("3. Håndter medlem (Vis/slet/rediger)");
-                System.out.println("4. Tilbage til hovedmenu");
-        }
-
-        public void displayFinanceMenu() {
-                System.out.println();
-                System.out.println("Økonomi:");
-                System.out.println("1. Kommende betalinger");
-                System.out.println("2. Betalinger i restance");
-                System.out.println("3. Tilbage til hovedmenu");
+                System.out.println("3. Opret kontigentoplysninger.");
+                System.out.println("4. Vis alle medlemmer og kontingent info");
+                System.out.println("7. Rediger medlem (MANGLER)");
+                System.out.println("8. Vis medlem (MANGLER)");
+                System.out.println("9. Slet medlem (MANGLER)");
+                System.out.println("10. Tilbage til hovedmenu");
         }
 
         public void runMenu() {
-                SampleMember.initializeSampleMembers();
                 boolean running = true;
 
                 while (running) {
@@ -42,9 +49,6 @@ public class Menu {
                                         runMemberMenu();
                                         break;
                                 case "2":
-                                        runFinanceMenu();
-                                        break;
-                                case "3":
                                         running = false;
                                         break;
                                 default:
@@ -64,45 +68,22 @@ public class Menu {
 
                         switch (choice) {
                                 case "1":
-                                        MemberManagement.createSwimmer();
+                                        memberManagement.createSwimmer();
                                         break;
                                 case "2":
-                                        MemberManagement.createTrainer();
+                                        memberManagement.createTrainer();
                                         break;
                                 case "3":
-                                        MemberManagement.handleMember();
+                                        memberManagement.createKontigentBetaling();
                                         break;
                                 case "4":
+                                        MemberManagement.visKontingentMenu(opretKontingentListe());
+                                        break;
+                                case "5":
+                                        // deleteMember();
+                                        break;
+                                case "6":
                                         memberMenuRunning = false;
-                                        break;
-                                default:
-                                        System.out.println("Ugyldigt valg. Prøv igen.");
-                        }
-                }
-        }
-
-        private void runFinanceMenu() {
-                boolean financeMenuRunning = true;
-
-                while (financeMenuRunning) {
-                        displayFinanceMenu();
-                        System.out.print("Vælg en underkategori: ");
-                        String choice = scanner.nextLine();
-
-                        switch (choice) {
-                                case "1":
-                                        Payment.displayUpcomingPayments(Payment.paymentList);
-                                        break;
-                                case "2":
-                                        Payment.displayPaymentsOverdue();
-                                        break;
-
-                                case "3":
-                                        Payment.markAsPaidAndCreateNewPayment();
-                                        break;
-
-                                case "4":
-                                        financeMenuRunning = false;
                                         break;
                                 default:
                                         System.out.println("Ugyldigt valg. Prøv igen.");

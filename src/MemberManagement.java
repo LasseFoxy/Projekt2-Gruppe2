@@ -2,12 +2,10 @@ import java.time.*;
 import java.time.format.*;
 import java.util.*;
 
-
 public class MemberManagement {
 
     private static final Scanner scanner = new Scanner(System.in);
     public static final ArrayList<Member> membersList = new ArrayList<>();
-
 
     public static Member gatherBasicMemberInfo() {
             System.out.print("Indtast fornavn: ");

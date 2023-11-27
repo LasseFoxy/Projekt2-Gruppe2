@@ -2,7 +2,6 @@ import java.time.*;
 import java.util.*;
 import java.time.format.DateTimeFormatter;
 
-
 public class Payment {
     private static final Scanner scanner = new Scanner(System.in);
     public static final ArrayList<Payment> paymentList = new ArrayList<>();

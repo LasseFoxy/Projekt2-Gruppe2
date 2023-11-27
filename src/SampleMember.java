@@ -28,15 +28,18 @@ public class SampleMember {
         MemberManagement.membersList.add(new Trainer("Julie", "Rasmussen", LocalDate.of(1986, 8, 19), "00112233", "julie@example.com", 20, "Junior Træner"));
 
         for (Member member : MemberManagement.membersList) {
-            LocalDate paymentDueDate = LocalDate.now().plusYears(1);
-            Payment payment = new Payment(member, paymentDueDate);
-            Payment.paymentList.add(payment);
+            if (member instanceof Swimmer) {
+                LocalDate paymentDueDate = LocalDate.now().plusYears(1);
+                Payment payment = new Payment(member, paymentDueDate);
+                Payment.paymentList.add(payment);
+            }
         }
 
         Payment.paymentList.get(0).setPaymentDueDate(LocalDate.now().minusMonths(1));
         Payment.paymentList.get(1).setPaymentDueDate(LocalDate.now().minusDays(10));
         Payment.paymentList.get(2).setPaymentDueDate(LocalDate.now().minusDays(20));
-
+        Payment.paymentList.get(3).setPaymentDueDate(LocalDate.now().plusDays(20));
+        Payment.paymentList.get(4).setPaymentDueDate(LocalDate.now().plusDays(4));
     }
 }
 

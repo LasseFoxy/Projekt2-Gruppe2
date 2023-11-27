@@ -35,13 +35,22 @@ public class Payment {
         return paymentDueDate;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
     public void setPaymentDueDate(LocalDate paymentDueDate) {
         this.paymentDueDate = paymentDueDate;
     }
 
-    public boolean isPaid() {
+    public boolean getIsPaid() {
         return isPaid;
     }
+
+    public void setIsPaid(boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
 
     public double getAmount() {
         return amount;
@@ -54,17 +63,80 @@ public class Payment {
         paymentList.add(newPayment);
     }
 
-    // Metode til at markere kontingent som betalt og skabe ny betaling (ny betalingsdato = betalingsdato + 1 år)
-    public static void markAsPaidAndCreateNewPayment() {
-        System.out.print("Søg efter medlem (fornavn, efternavn, telefonnummer, medlemsID, e-mail): ");
-        String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = MemberManagement.searchOnlySwimmers(searchCriteria);
-        Member selectedMember = MemberManagement.selectMemberFromList(foundMembers);
+    // Metode til at oprette en ny betaling
+    private static void createNewPayment(Payment payment) {
+        LocalDate nextPaymentDate = payment.getPaymentDueDate().plusYears(1);
+        Payment newPayment = new Payment(payment.getMember(), nextPaymentDate);
+        paymentList.add(newPayment);
+        System.out.println("Ny betaling oprettet med forfaldsdato: " + nextPaymentDate);
+    }
 
-        System.out.println("Valgt medlem:");
-        System.out.println(selectedMember);
+    // Metode til at markere betaling som betalt
+    private static void markAsPaid(Payment payment) {
+        payment.setIsPaid(true); // Antag at Payment klassen har en metode setPaid
+        System.out.println("Betaling for medlemmet " + payment.getMemberFirstName() + " " + payment.getMemberLastName() + " er markeret som betalt.");
+    }
+
+    // Metode til at søge efter payments (søgning efter Navn eller Medlems ID)
+    private static List<Payment> searchPayments(String searchCriteria) {
+        List<Payment> foundPayments = new ArrayList<>();
+        for (Payment payment : paymentList) {
+            boolean matchesCriteria = payment.getMemberFirstName().equalsIgnoreCase(searchCriteria) ||
+                    payment.getMemberLastName().equalsIgnoreCase(searchCriteria) ||
+                    Integer.toString(payment.getMemberID()).equalsIgnoreCase(searchCriteria);
+
+            if (matchesCriteria) {
+                foundPayments.add(payment);
+            }
+        }
+        return foundPayments;
+    }
+
+    private static Payment selectPaymentFromList(List<Payment> payments) {
+        if (payments.size() == 1) {
+            return payments.get(0);
+        }
+
+        for (int i = 0; i < payments.size(); i++) {
+            System.out.println((i + 1) + ". " + payments.get(i));
+        }
+
+        System.out.print("Vælg en betaling: \n");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice < 1 || choice > payments.size()) {
+            System.out.println("Ugyldigt valg.");
+            return null;
+        }
+
+        return payments.get(choice - 1);
+    }
+
+    // Metode til at håndtere betalingsprocessen
+    public static void handlePayment() {
+        System.out.print("Søg efter betaling (Fornavn, Efternavn eller Medlems ID): ");
+        String searchCriteria = scanner.nextLine();
+        System.out.println();
+        List<Payment> foundPayments = searchPayments(searchCriteria);
+
+        if (foundPayments.isEmpty()) {
+            System.out.println("Ingen betalinger fundet.");
+            return;
+        }
+
+        System.out.println("Betalinger: ");
+        Payment selectedPayment = selectPaymentFromList(foundPayments);
+
+        if (selectedPayment == null) {
+            System.out.println("Ingen betaling valgt.");
+            return;
+        }
+
+        System.out.println("Valgt betaling:");
+        System.out.println(selectedPayment);
         System.out.println("1. Marker som betalt");
-        System.out.println("2. Gå tilbage");
+        System.out.println("0. Gå tilbage");
 
         System.out.print("Vælg en handling: ");
         int action = scanner.nextInt();
@@ -72,29 +144,27 @@ public class Payment {
 
         switch (action) {
             case 1:
-                // Her skal du implementere logikken for at markere betalingen som betalt og oprette en ny betaling.
+                markAsPaid(selectedPayment);
+                createNewPayment(selectedPayment);
                 break;
-            case 2:
+            case 0:
                 break;
             default:
                 System.out.println("Ugyldigt valg.");
         }
     }
 
-
-
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = paymentDueDate.format(formatter);
-        return "Payment{" +
-                "memberFirstName= " + getMemberFirstName() +'\'' +
-                "memberLastName" + getMemberLastName() +
-                ", memberID=" + getMemberID() +
-                ", paymentDueDate=" + formattedDate +
-                ", isPaid=" + isPaid +
-                ", amount=" + amount +
-                '}';
+        String paidStatus = isPaid ? "Betalt" : "Ikke betalt";
+        String fullName = getMemberFirstName() + " " + getMemberLastName();
+        return "Medlems ID: " + getMemberID() +
+                ", Navn: " + fullName +
+                ", Betalingsdato: " + formattedDate +
+                ", Betalingsstatus: " + paidStatus +
+                ", Beløb: " + String.format("%.2f", amount);
     }
 
     // Metode til at beregne kontingentbeløbet
@@ -116,15 +186,16 @@ public class Payment {
 
     public static void displayUpcomingPayments(ArrayList<Payment> payments) {
         boolean foundUnpaid = false;
+        System.out.println("Betalinger: ");
 
         for (Payment payment : payments) {
-            if (!payment.isPaid() && payment.getPaymentDueDate().isAfter(LocalDate.now())) {
+            if (!payment.getIsPaid() && payment.getPaymentDueDate().isAfter(LocalDate.now())) {
                 String output = String.format("Member ID: %d, Navn: %s %s, Betalingsdato: %s, Betalingsstatus: %s, Beløb: %.2f",
                         payment.getMemberID(),
                         payment.getMemberFirstName(),
                         payment.getMemberLastName(),
                         payment.getPaymentDueDate(),
-                        payment.isPaid() ? "Betalt" : "Ikke betalt",
+                        payment.getIsPaid() ? "Betalt" : "Ikke betalt",
                         payment.getAmount());
                 System.out.println(output);
                 foundUnpaid = true;
@@ -141,7 +212,7 @@ public class Payment {
 
         for (Payment payment : paymentList) {
             // Tjek om betalingen er forfalden og ikke betalt
-            if (!payment.isPaid() && payment.getPaymentDueDate().isBefore(LocalDate.now())) {
+            if (!payment.getIsPaid() && payment.getPaymentDueDate().isBefore(LocalDate.now())) {
                 String output = String.format("Member ID: %d, Navn: %s %s, Forfalden Betalingsdato: %s, Beløb: %.2f",
                         payment.getMemberID(),
                         payment.getMemberFirstName(),
@@ -157,6 +228,5 @@ public class Payment {
             System.out.println("Ingen betalinger i restance.");
         }
     }
-
 }
 

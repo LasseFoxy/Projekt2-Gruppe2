@@ -60,11 +60,7 @@ public class MemberManagement {
             String ageCategory = age < 18 ? "Junior" : "Senior";
 
             System.out.println("\nIndtastede data:");
-            System.out.println("Fornavn: " + basicMemberInfo.getFirstName());
-            System.out.println("Efternavn: " + basicMemberInfo.getLastName());
-            System.out.println("Fødselsdato: " + birthDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " (" + ageCategory + ")");
-            System.out.println("Telefonnummer: " + basicMemberInfo.getPhoneNumber());
-            System.out.println("Email: " + basicMemberInfo.getEmail());
+            System.out.println(basicMemberInfo.basicInfoToString());
             System.out.println("Medlemstype: " + memberType);
             System.out.println("Aktivitetstype: " + activityType);
 
@@ -94,13 +90,8 @@ public class MemberManagement {
         scanner.nextLine();
         String position = positionChoice == 1 ? "Junior Træner" : "Senior Træner";
 
-        // Viser indtastede data
         System.out.println("\nIndtastede data:");
-        System.out.println("Fornavn: " + basicMemberInfo.getFirstName());
-        System.out.println("Efternavn: " + basicMemberInfo.getLastName());
-        System.out.println("Fødselsdato: " + basicMemberInfo.getBirthDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        System.out.println("Telefonnummer: " + basicMemberInfo.getPhoneNumber());
-        System.out.println("Email: " + basicMemberInfo.getEmail());
+        System.out.println(basicMemberInfo.basicInfoToString());
         System.out.println("Stilling: " + position);
 
         System.out.print("\nTryk 1 for at bekræfte eller 2 for at annullere: ");
@@ -117,7 +108,7 @@ public class MemberManagement {
         }
     }
 
-    // Metode til at finde det første ledige medlemsnummer
+    // Metode til at finde og tildele det første ledige medlemsnummer
     private static int findFirstAvailableMemberID() {
         int memberID = 1;
         while (true) {
@@ -135,30 +126,33 @@ public class MemberManagement {
         }
     }
 
+    //Metode til at håndtere medlem (rediger/slet stamdata og informationer)
     public static void handleMember() {
         while (true) {
-            System.out.print("Søg efter medlem (fornavn, efternavn, telefonnummer, medlemsID, e-mail): ");
+            System.out.print("Søg efter medlem (Fornavn, Efternavn, Telefonnummer, E-mail eller Medlems ID): ");
             String searchCriteria = scanner.nextLine();
             List<Member> foundMembers = searchAllMembers(searchCriteria);
             Member selectedMember = selectMemberFromList(foundMembers);
+            System.out.println();
 
             if (selectedMember == null) {
                 System.out.println("Ingen medlemmer fundet");
                 System.out.println("1. Søg igen");
-                System.out.println("2. Gå tilbage");
+                System.out.println("0. Gå tilbage");
                 System.out.print("Vælg en handling: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine();
 
-                if (choice == 2) {
+                if (choice == 0) {
                     return;
                 }
+
             } else {
                 System.out.println("Valgt medlem:");
                 System.out.println(selectedMember);
                 System.out.println("1. Rediger medlem");
                 System.out.println("2. Slet medlem");
-                System.out.println("3. Gå tilbage");
+                System.out.println("0. Gå tilbage");
 
                 System.out.print("Vælg en handling: ");
                 int action = scanner.nextInt();
@@ -167,15 +161,16 @@ public class MemberManagement {
                 switch (action) {
                     case 1:
                         editMember(selectedMember);
-                        break;
+                        return;
                     case 2:
                         membersList.remove(selectedMember);
                         System.out.println("Medlem slettet.");
-                        break;
-                    case 3:
-                        return; // Afslutter metoden og går tilbage
+                        return;
+                    case 0:
+                        return;
                     default:
                         System.out.println("Ugyldigt valg.");
+                        return;
                 }
             }
         }
@@ -202,11 +197,13 @@ public class MemberManagement {
         return foundMembers;
     }
 
+    //Metode til at vælge medlem fra liste
     public static Member selectMemberFromList(List<Member> members) {
         if (members.isEmpty()) {
             return null;
         }
 
+        System.out.println("\nMedlemmer: ");
         for (int i = 0; i < members.size(); i++) {
             System.out.println((i + 1) + ". " + memberSummary(members.get(i)));
         }
@@ -249,6 +246,7 @@ public class MemberManagement {
         boolean editing = true;
 
         while (editing) {
+            System.out.println();
             System.out.println("Vælg en information at redigere:");
             System.out.println("1. Fornavn");
             System.out.println("2. Efternavn");
@@ -259,13 +257,10 @@ public class MemberManagement {
             if (member instanceof Swimmer) {
                 System.out.println("6. Medlemstype (Aktiv/Passiv)");
                 System.out.println("7. Aktivitetstype (Konkurrencesvømmer/Fritidssvømmer)");
-                System.out.println("8. Afslut redigering");
             } else if (member instanceof Trainer) {
                 System.out.println("6. Stilling (Junior/Senior Træner)");
-                System.out.println("7. Afslut redigering");
-            } else {
-                System.out.println("6. Afslut redigering");
             }
+                System.out.println("0. Afslut redigering");
 
             System.out.print("Vælg et nummer: ");
             int choice = scanner.nextInt();
@@ -309,11 +304,10 @@ public class MemberManagement {
                     if (member instanceof Swimmer) {
                         System.out.print("Indtast ny aktivitetstype (Konkurrencesvømmer/Fritidssvømmer): ");
                         ((Swimmer) member).setActivityType(scanner.nextLine());
-                    } else {
-                        editing = false;
                     }
+                    else System.out.println("Ugyldigt valg. Prøv igen.");
                     break;
-                case 8:
+                case 0:
                     editing = false;
                     break;
                 default:

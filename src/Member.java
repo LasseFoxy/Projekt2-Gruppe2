@@ -41,13 +41,25 @@ public class Member {
     public void setMemberID(int memberID) { this.memberID = memberID; }
 
 
-    //toString metode der kan vise alle stamdata og informationer
-    @Override
-    public String toString() {
+    //metode der viser stamdata (Basic member info) inden oprettelse (uden memberID)
+    public String basicInfoToString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = birthDate.format(formatter);
 
-        return  "Medlems ID: " + memberID +
+        return "Fornavn: " + firstName +
+                "\nEfternavn: " + lastName +
+                "\nFødselsdato: " + formattedDate +
+                "\nTelefonnummer: " + phoneNumber +
+                "\nEmail: " + email;
+    }
+
+    //toString der viser stamdata med MemberID (efter "bekræft oprettelse")
+    @Override
+    public String toString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String formattedDate = birthDate.format(formatter);
+
+        return "Medlems ID: " + memberID+
                 "\nFornavn: " + firstName +
                 "\nEfternavn: " + lastName +
                 "\nFødselsdato: " + formattedDate +

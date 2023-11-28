@@ -8,7 +8,7 @@ public class Menu {
                 System.out.println("Hovedmenu:");
                 System.out.println("1. Medlemsskaber");
                 System.out.println("2. Økonomi");
-                System.out.println("3. Afslut");
+                System.out.println("0. Afslut");
         }
 
         public void displayMemberMenu() {
@@ -17,7 +17,7 @@ public class Menu {
                 System.out.println("1. Opret svømmer");
                 System.out.println("2. Opret træner");
                 System.out.println("3. Håndter medlem (Vis/slet/rediger)");
-                System.out.println("4. Tilbage til hovedmenu");
+                System.out.println("0. Tilbage til hovedmenu");
         }
 
         public void displayFinanceMenu() {
@@ -25,7 +25,8 @@ public class Menu {
                 System.out.println("Økonomi:");
                 System.out.println("1. Kommende betalinger");
                 System.out.println("2. Betalinger i restance");
-                System.out.println("3. Tilbage til hovedmenu");
+                System.out.println("3. Marker kontingentbetaling som betalt");
+                System.out.println("0. Tilbage til hovedmenu");
         }
 
         public void runMenu() {
@@ -44,7 +45,7 @@ public class Menu {
                                 case "2":
                                         runFinanceMenu();
                                         break;
-                                case "3":
+                                case "0":
                                         running = false;
                                         break;
                                 default:
@@ -72,7 +73,7 @@ public class Menu {
                                 case "3":
                                         MemberManagement.handleMember();
                                         break;
-                                case "4":
+                                case "0":
                                         memberMenuRunning = false;
                                         break;
                                 default:
@@ -88,6 +89,7 @@ public class Menu {
                         displayFinanceMenu();
                         System.out.print("Vælg en underkategori: ");
                         String choice = scanner.nextLine();
+                        System.out.println();
 
                         switch (choice) {
                                 case "1":
@@ -98,10 +100,10 @@ public class Menu {
                                         break;
 
                                 case "3":
-                                        Payment.markAsPaidAndCreateNewPayment();
+                                        Payment.handlePayment();
                                         break;
 
-                                case "4":
+                                case "0":
                                         financeMenuRunning = false;
                                         break;
                                 default:

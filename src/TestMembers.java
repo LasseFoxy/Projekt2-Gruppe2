@@ -1,17 +1,19 @@
 import java.time.LocalDate;
+import java.util.Random;
 
-public class SampleMember {
 
-    public static void initializeSampleMembers() {
+public class TestMembers {
+
+    public static void initializeTestMembers() {
         // Tilføj 10 svømmere
         MemberManagement.membersList.add(new Swimmer("Lars", "Jensen", LocalDate.of(2005, 6, 15), "12345678", "lars@example.com", 1, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Sofia", "Larsen", LocalDate.of(2003, 4, 20), "23456789", "sofia@example.com", 2, "Aktiv", "Fritidssvømmer"));
-        MemberManagement.membersList.add(new Swimmer("Mads", "Nielsen", LocalDate.of(2004, 5, 22), "34567890", "mads@example.com", 3, "Passiv", "Fritidssvømmer"));
+        MemberManagement.membersList.add(new Swimmer("Mads", "Nielsen", LocalDate.of(2004, 5, 22), "34567890", "mads@example.com", 3, "Passiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Emma", "Jensen", LocalDate.of(2006, 7, 18), "45678901", "emma@example.com", 4, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Frederik", "Hansen", LocalDate.of(2002, 3, 14), "56789012", "frederik@example.com", 5, "Passiv", "Fritidssvømmer"));
         MemberManagement.membersList.add(new Swimmer("Ida", "Christensen", LocalDate.of(2007, 8, 19), "67890123", "ida@example.com", 6, "Aktiv", "Konkurrencesvømmer"));
-        MemberManagement.membersList.add(new Swimmer("Anders", "Larsen", LocalDate.of(2001, 2, 10), "78901234", "anders@example.com", 7, "Aktiv", "Fritidssvømmer"));
-        MemberManagement.membersList.add(new Swimmer("Mette", "Nielsen", LocalDate.of(2000, 1, 5), "89012345", "mette@example.com", 8, "Passiv", "Fritidssvømmer"));
+        MemberManagement.membersList.add(new Swimmer("Anders", "Larsen", LocalDate.of(2001, 2, 10), "78901234", "anders@example.com", 7, "Aktiv", "Konkurrencesvømmer"));
+        MemberManagement.membersList.add(new Swimmer("Mette", "Nielsen", LocalDate.of(2000, 1, 5), "89012345", "mette@example.com", 8, "Passiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Peter", "Jensen", LocalDate.of(1999, 12, 30), "90123456", "peter@example.com", 9, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Anne", "Hansen", LocalDate.of(1998, 11, 25), "01234567", "anne@example.com", 10, "Passiv", "Fritidssvømmer"));
 
@@ -30,16 +32,51 @@ public class SampleMember {
         for (Member member : MemberManagement.membersList) {
             if (member instanceof Swimmer) {
                 LocalDate paymentDueDate = LocalDate.now().plusYears(1);
-                Payment payment = new Payment(member, paymentDueDate);
-                Payment.paymentList.add(payment);
+                AnnualMemberPayment payment = new AnnualMemberPayment(member, paymentDueDate);
+                AnnualMemberPayment.paymentList.add(payment);
             }
         }
 
-        Payment.paymentList.get(0).setPaymentDueDate(LocalDate.now().minusMonths(1));
-        Payment.paymentList.get(1).setPaymentDueDate(LocalDate.now().minusDays(10));
-        Payment.paymentList.get(2).setPaymentDueDate(LocalDate.now().minusDays(20));
-        Payment.paymentList.get(3).setPaymentDueDate(LocalDate.now().plusDays(20));
-        Payment.paymentList.get(4).setPaymentDueDate(LocalDate.now().plusDays(4));
+        AnnualMemberPayment.paymentList.get(0).setPaymentDueDate(LocalDate.now().minusMonths(1));
+        AnnualMemberPayment.paymentList.get(1).setPaymentDueDate(LocalDate.now().minusDays(10));
+        AnnualMemberPayment.paymentList.get(2).setPaymentDueDate(LocalDate.now().minusDays(20));
+        AnnualMemberPayment.paymentList.get(3).setPaymentDueDate(LocalDate.now().plusDays(20));
+        AnnualMemberPayment.paymentList.get(4).setPaymentDueDate(LocalDate.now().plusDays(4));
+    }
+
+    public static void generateTimesForCompetitiveSwimmers() {
+        Random random = new Random();
+        String[] disciplines = {"Crawl", "Brystsvømning", "Rygsvømning", "Butterfly"};
+        BestTimeData.TimeType[] timeTypes = {BestTimeData.TimeType.TRAINING, BestTimeData.TimeType.COMPETITION};
+
+        for (Member member : MemberManagement.membersList) {
+            if (member instanceof Swimmer && ((Swimmer) member).getActivityType().equals("Konkurrencesvømmer")) {
+                Swimmer swimmer = (Swimmer) member;
+
+                for (String discipline : disciplines) {
+                    for (BestTimeData.TimeType timeType : timeTypes) {
+                        int minutes = random.nextInt(2); // Random minut
+                        int seconds = random.nextInt(60); // Random sekund fra 0 til 59
+                        int hundredths = random.nextInt(100); // Random hundrededele fra 0 til 99
+
+                        String time = String.format("%02d:%02d:%02d", minutes, seconds, hundredths);
+
+                        // Opret en TimeRecord for svømmeren
+                        BestTimeData timeRecord = new BestTimeData(
+                                timeType,
+                                discipline,
+                                LocalDate.now(),
+                                time,
+                                swimmer.getFirstName(),
+                                swimmer.getLastName(),
+                                swimmer.getMemberID()
+                        );
+
+                        // Tilføj TimeRecord til BestSwimmerTimes.swimmerTimes
+                        BestTimeDataManagement.swimmerTimes.add(timeRecord);
+                    }
+                }
+            }
+        }
     }
 }
-

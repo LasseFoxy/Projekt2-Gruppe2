@@ -53,7 +53,7 @@ public class Member {
                 "\nEmail: " + email;
     }
 
-    //toString der viser stamdata med MemberID (efter "bekræft oprettelse")
+    //Metode der viser stamdata med MemberID (efter oprettelse)
     @Override
     public String toString(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

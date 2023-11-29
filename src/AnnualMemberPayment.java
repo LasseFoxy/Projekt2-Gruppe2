@@ -2,15 +2,15 @@ import java.time.*;
 import java.util.*;
 import java.time.format.DateTimeFormatter;
 
-public class Payment {
+public class AnnualMemberPayment {
     private static final Scanner scanner = new Scanner(System.in);
-    public static final ArrayList<Payment> paymentList = new ArrayList<>();
+    public static final ArrayList<AnnualMemberPayment> paymentList = new ArrayList<>();
     private Member member;
     private LocalDate paymentDueDate;
     private boolean isPaid;
     private double amount;
 
-    public Payment(Member member, LocalDate paymentDueDate) {
+    public AnnualMemberPayment(Member member, LocalDate paymentDueDate) {
         this.member = member;
         this.paymentDueDate = paymentDueDate;
         this.isPaid = false;
@@ -58,28 +58,28 @@ public class Payment {
     // Metode til at oprette regning for første kontingentbetaling (betalingsdato = et år efter oprettelse af svømmeren)
     public static void createInitialPayment(Member member) {
         LocalDate paymentDueDate = LocalDate.now().plusYears(1);
-        Payment newPayment = new Payment(member, paymentDueDate);
+        AnnualMemberPayment newPayment = new AnnualMemberPayment(member, paymentDueDate);
         paymentList.add(newPayment);
     }
 
     // Metode til at oprette en ny betaling
-    private static void createNewPayment(Payment payment) {
+    private static void createNewPayment(AnnualMemberPayment payment) {
         LocalDate nextPaymentDate = payment.getPaymentDueDate().plusYears(1);
-        Payment newPayment = new Payment(payment.getMember(), nextPaymentDate);
+        AnnualMemberPayment newPayment = new AnnualMemberPayment(payment.getMember(), nextPaymentDate);
         paymentList.add(newPayment);
         System.out.println("Ny betaling oprettet med forfaldsdato: " + nextPaymentDate);
     }
 
     // Metode til at markere betaling som betalt
-    private static void markAsPaid(Payment payment) {
+    private static void markAsPaid(AnnualMemberPayment payment) {
         payment.setIsPaid(true); // Antag at Payment klassen har en metode setPaid
         System.out.println("Betaling for medlemmet " + payment.getMemberFirstName() + " " + payment.getMemberLastName() + " er markeret som betalt.");
     }
 
     // Metode til at søge efter payments (søgning efter Navn eller Medlems ID)
-    private static List<Payment> searchPayments(String searchCriteria) {
-        List<Payment> foundPayments = new ArrayList<>();
-        for (Payment payment : paymentList) {
+    private static List<AnnualMemberPayment> searchPayments(String searchCriteria) {
+        List<AnnualMemberPayment> foundPayments = new ArrayList<>();
+        for (AnnualMemberPayment payment : paymentList) {
             boolean matchesCriteria = payment.getMemberFirstName().equalsIgnoreCase(searchCriteria) ||
                     payment.getMemberLastName().equalsIgnoreCase(searchCriteria) ||
                     Integer.toString(payment.getMemberID()).equalsIgnoreCase(searchCriteria);
@@ -91,7 +91,7 @@ public class Payment {
         return foundPayments;
     }
 
-    private static Payment selectPaymentFromList(List<Payment> payments) {
+    private static AnnualMemberPayment selectPaymentFromList(List<AnnualMemberPayment> payments) {
         if (payments.size() == 1) {
             return payments.get(0);
         }
@@ -117,7 +117,7 @@ public class Payment {
         System.out.print("Søg efter betaling (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
         System.out.println();
-        List<Payment> foundPayments = searchPayments(searchCriteria);
+        List<AnnualMemberPayment> foundPayments = searchPayments(searchCriteria);
 
         if (foundPayments.isEmpty()) {
             System.out.println("Ingen betalinger fundet.");
@@ -125,7 +125,7 @@ public class Payment {
         }
 
         System.out.println("Betalinger: ");
-        Payment selectedPayment = selectPaymentFromList(foundPayments);
+        AnnualMemberPayment selectedPayment = selectPaymentFromList(foundPayments);
 
         if (selectedPayment == null) {
             System.out.println("Ingen betaling valgt.");
@@ -183,11 +183,11 @@ public class Payment {
         }
     }
 
-    public static void displayUpcomingPayments(ArrayList<Payment> payments) {
+    public static void displayUpcomingPayments(ArrayList<AnnualMemberPayment> payments) {
         boolean foundUnpaid = false;
         System.out.println("Betalinger: ");
 
-        for (Payment payment : payments) {
+        for (AnnualMemberPayment payment : payments) {
             if (!payment.getIsPaid() && payment.getPaymentDueDate().isAfter(LocalDate.now())) {
                 String output = String.format("Member ID: %d, Navn: %s %s, Betalingsdato: %s, Betalingsstatus: %s, Beløb: %.2f",
                         payment.getMemberID(),
@@ -209,7 +209,7 @@ public class Payment {
     public static void displayPaymentsOverdue() {
         boolean foundOverdue = false;
 
-        for (Payment payment : paymentList) {
+        for (AnnualMemberPayment payment : paymentList) {
             // Tjek om betalingen er forfalden og ikke betalt
             if (!payment.getIsPaid() && payment.getPaymentDueDate().isBefore(LocalDate.now())) {
                 String output = String.format("Member ID: %d, Navn: %s %s, Forfalden Betalingsdato: %s, Beløb: %.2f",

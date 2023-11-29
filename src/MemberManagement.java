@@ -7,6 +7,7 @@ public class MemberManagement {
     private static final Scanner scanner = new Scanner(System.in);
     public static final ArrayList<Member> membersList = new ArrayList<>();
 
+    //Metode til at indsamle Stamdata (Fornavn, Efternavn, Fødselsdato, Telefonnummer, E-mail)
     public static Member gatherBasicMemberInfo() {
             System.out.print("Indtast fornavn: ");
             String firstName = scanner.nextLine();
@@ -41,6 +42,14 @@ public class MemberManagement {
             return new Member(firstName, lastName, birthDate, phoneNumber, email, memberID);
         }
 
+    public static String memberSummary(Member member) {
+        return String.format("ID: %d - Navn: %s %s - Tlf: %s - Email: %s",
+                member.getMemberID(),
+                member.getFirstName(),
+                member.getLastName(),
+                member.getPhoneNumber(),
+                member.getEmail());
+    }
 
         // Metode til at oprette en svømmer
         public static void createSwimmer() {
@@ -75,7 +84,7 @@ public class MemberManagement {
                 System.out.println(basicMemberInfo.getFirstName() + " " + basicMemberInfo.getLastName() + " tilføjet som Svømmer med Medlems ID: " + swimmer.getMemberID());
 
                 //metode der skaber ny payment
-                Payment.createInitialPayment(swimmer);
+                AnnualMemberPayment.createInitialPayment(swimmer);
             }
             else {
                 System.out.println("Oprettelse annulleret.");
@@ -176,25 +185,43 @@ public class MemberManagement {
         }
     }
 
-
-    // Metode til at søge efter medlemmer
-    private static List<Member> searchMembers(String searchCriteria, boolean includeSwimmers, boolean includeTrainers) {
+    //Hovedmetode for at søge efter medlemmer med søgekriterier
+    private static List<Member> searchMembers(String searchCriteria, boolean includeSwimmers, boolean includeTrainers, boolean includeCompetitiveSwimmers, boolean searchAllFields) {
         List<Member> foundMembers = new ArrayList<>();
         for (Member member : membersList) {
-            boolean matchesCriteria = member.getFirstName().equalsIgnoreCase(searchCriteria) ||
-                    member.getLastName().equalsIgnoreCase(searchCriteria) ||
-                    member.getPhoneNumber().equalsIgnoreCase(searchCriteria) ||
-                    String.valueOf(member.getMemberID()).equalsIgnoreCase(searchCriteria) ||
-                    member.getEmail().equalsIgnoreCase(searchCriteria);
+            boolean matchesCriteria = (searchAllFields && (
+                    member.getFirstName().equalsIgnoreCase(searchCriteria) ||
+                            member.getLastName().equalsIgnoreCase(searchCriteria) ||
+                            member.getPhoneNumber().equalsIgnoreCase(searchCriteria) ||
+                            String.valueOf(member.getMemberID()).equalsIgnoreCase(searchCriteria) ||
+                            member.getEmail().equalsIgnoreCase(searchCriteria))) ||
+                    (!searchAllFields && (
+                            member.getFirstName().equalsIgnoreCase(searchCriteria) ||
+                                    member.getLastName().equalsIgnoreCase(searchCriteria) ||
+                                    String.valueOf(member.getMemberID()).equalsIgnoreCase(searchCriteria)));
 
             boolean isSwimmer = member instanceof Swimmer;
             boolean isTrainer = member instanceof Trainer;
 
-            if (matchesCriteria && ((includeSwimmers && isSwimmer) || (includeTrainers && isTrainer))) {
+            if (matchesCriteria &&
+                    ((includeSwimmers && isSwimmer) ||
+                            (includeTrainers && isTrainer) ||
+                            (includeCompetitiveSwimmers && isSwimmer && ((Swimmer) member).getActivityType().equalsIgnoreCase("Konkurrencesvømmer")))) {
                 foundMembers.add(member);
             }
         }
         return foundMembers;
+    }
+
+
+    //Metode til at søge i alle medlemmer (alle kriterier true)
+    private static List<Member> searchAllMembers(String searchCriteria) {
+        return searchMembers(searchCriteria, true, true, true, true);
+    }
+
+    //Metode til at søge efter kun konkurrencesvømmere (kun inkludering af konkurrencesvømmere er true)
+    public static List<Member> searchOnlyCompetitionSwimmers(String searchCriteria){
+        return searchMembers(searchCriteria, false, false, true, false);
     }
 
     //Metode til at vælge medlem fra liste
@@ -223,23 +250,6 @@ public class MemberManagement {
         }
 
         return members.get(choice - 1);
-    }
-
-    private static List<Member> searchAllMembers(String searchCriteria) {
-        return searchMembers(searchCriteria, true, true);
-    }
-
-    public static List<Member> searchOnlySwimmers(String searchCriteria){
-        return searchMembers(searchCriteria, true, false);
-    }
-
-    public static String memberSummary(Member member) {
-        return String.format("ID: %d - Navn: %s %s - Tlf: %s - Email: %s",
-                member.getMemberID(),
-                member.getFirstName(),
-                member.getLastName(),
-                member.getPhoneNumber(),
-                member.getEmail());
     }
 
     private static void editMember(Member member) {

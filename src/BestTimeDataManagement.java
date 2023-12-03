@@ -1,6 +1,8 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BestTimeDataManagement {
     private static final Scanner scanner = new Scanner(System.in);
@@ -9,21 +11,82 @@ public class BestTimeDataManagement {
     public BestTimeDataManagement() {
         swimmerTimes = new ArrayList<>();
     }
+    public static boolean isValidDateFormat(String dateString) {
+        try {
+            LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+    public static boolean isValidTimeFormat(String timeString) {
+        // Assuming time format is MM:ss:hh
+        return timeString.matches("^([0-5][0-9]):([0-5][0-9]):([0-9][0-9])$");
+    }
+
 
     public static void addTrainingTime(Member selectedSwimmer, String discipline, LocalDate date, String time) {
         int memberID = selectedSwimmer.getMemberID();
-        BestTimeData record = new BestTimeData(BestTimeData.TimeType.TRAINING, discipline, date, time, selectedSwimmer.getFirstName(), selectedSwimmer.getLastName(), memberID);
-        swimmerTimes.add(record);
-        System.out.println("Træningstid tilføjet for " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName());
+
+        // Check if the new time is an improvement
+        boolean isNewPersonalBest = isNewPersonalBest(
+                selectedSwimmer.getFirstName(),
+                selectedSwimmer.getLastName(),
+                memberID,
+                discipline,
+                time,
+                BestTimeData.TimeType.TRAINING
+        );
+
+        if (isNewPersonalBest) {
+            // Add the new time as it's an improvement
+            BestTimeData record = new BestTimeData(
+                    BestTimeData.TimeType.TRAINING,
+                    discipline,
+                    date,
+                    time,
+                    selectedSwimmer.getFirstName(),
+                    selectedSwimmer.getLastName(),
+                    memberID
+            );
+            swimmerTimes.add(record);
+            System.out.println("Træningstid tilføjet for " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName());
+        } else {
+            System.out.println("Den indtastede tid er ikke forbedret.");
+        }
     }
+
 
     public static void addCompetitionResult(Member selectedSwimmer, String discipline, LocalDate date, String time) {
         int memberID = selectedSwimmer.getMemberID();
-        BestTimeData record = new BestTimeData(BestTimeData.TimeType.COMPETITION, discipline, date, time, selectedSwimmer.getFirstName(), selectedSwimmer.getLastName(), memberID);
-        swimmerTimes.add(record);
-        System.out.println("Konkurrence resultat tilføjet for " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName());
-    }
 
+        // Check if the new time is an improvement
+        boolean isNewPersonalBest = isNewPersonalBest(
+                selectedSwimmer.getFirstName(),
+                selectedSwimmer.getLastName(),
+                memberID,
+                discipline,
+                time,
+                BestTimeData.TimeType.COMPETITION
+        );
+
+        if (isNewPersonalBest) {
+            // Add the new time as it's an improvement
+            BestTimeData record = new BestTimeData(
+                    BestTimeData.TimeType.COMPETITION,
+                    discipline,
+                    date,
+                    time,
+                    selectedSwimmer.getFirstName(),
+                    selectedSwimmer.getLastName(),
+                    memberID
+            );
+            swimmerTimes.add(record);
+            System.out.println("Konkurrence resultat tilføjet for " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName());
+        } else {
+            System.out.println("Den indtastede tid er ikke forbedret.");
+        }
+    }
 
     public static void handleTrainingTime() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
@@ -122,6 +185,33 @@ public class BestTimeDataManagement {
         } else {
             System.out.println("Ingen medlemmer fundet eller ugyldigt valg.");
         }
+    } // Metode der tjekker om den nye oplyste tid er en ny personly rekord eller ej
+    public static boolean isNewPersonalBest(String firstName, String lastName, int memberID, String discipline, String newTime, BestTimeData.TimeType newTimeType) {
+        boolean isCompetitionTime = newTimeType == BestTimeData.TimeType.COMPETITION;
+
+        // Find existing records for the same swimmer, discipline, and time type
+        List<BestTimeData> existingRecords = swimmerTimes.stream()
+                .filter(timeRecord ->
+                        timeRecord.getFirstName().equals(firstName) &&
+                                timeRecord.getLastName().equals(lastName) &&
+                                timeRecord.getMemberID() == memberID &&
+                                timeRecord.getDiscipline().equalsIgnoreCase(discipline) &&
+                                timeRecord.getType() == newTimeType)
+                .collect(Collectors.toList());
+
+        // If no records exist, it's a new personal best
+        if (existingRecords.isEmpty()) {
+            return true;
+        }
+
+        // Compare the new time with existing records
+        for (BestTimeData timeRecord : existingRecords) {
+            if (compareTimes(newTime, timeRecord.getTime()) >= 0) {
+                return false; // New time is slower or equal to an existing record
+            }
+        }
+
+        return true; // New time is faster than all existing records
     }
 
     /*public static void displayTop5SwimmersByDiscipline(String discipline, TimeRecord.TimeType timeType) {
@@ -170,7 +260,7 @@ public class BestTimeDataManagement {
     }*/
 
     // Hjælpefunktion til at sammenligne to tider i formatet MM:ss:hh
-    private static int compareTimes(String time1, String time2) {
+    public static int compareTimes(String time1, String time2) {
         // Håndter tilfælde, hvor en tid er "Ingen tid registreret"
         if (time1.equals("Ingen tid registreret") && time2.equals("Ingen tid registreret")) {
             return 0; // Begge tider er ens

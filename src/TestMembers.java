@@ -61,8 +61,50 @@ public class TestMembers {
 
                         String time = String.format("%02d:%02d:%02d", minutes, seconds, hundredths);
 
-                        // Opret en TimeRecord for svømmeren
-                        BestTimeData timeRecord = new BestTimeData(
+                        // Check if the generated time is a new personal best for competition
+                        boolean isNewPersonalBest = BestTimeDataManagement.isNewPersonalBest(
+                                swimmer.getFirstName(),
+                                swimmer.getLastName(),
+                                swimmer.getMemberID(),
+                                discipline,
+                                time,
+                                BestTimeData.TimeType.COMPETITION
+                        );
+
+                        // If it's a competition time and a new personal best, add it to the records
+                        if (timeType == BestTimeData.TimeType.COMPETITION && isNewPersonalBest) {
+                            BestTimeData timeRecord = new BestTimeData(
+                                    timeType,
+                                    discipline,
+                                    LocalDate.now(),
+                                    time,
+                                    swimmer.getFirstName(),
+                                    swimmer.getLastName(),
+                                    swimmer.getMemberID()
+                            );
+                            BestTimeDataManagement.swimmerTimes.add(timeRecord);
+                        } else if (timeType == BestTimeData.TimeType.TRAINING) {
+                            // Add all practice times without checking if they are personal bests
+                            BestTimeData timeRecord = new BestTimeData(
+                                    timeType,
+                                    discipline,
+                                    LocalDate.now(),
+                                    time,
+                                    swimmer.getFirstName(),
+                                    swimmer.getLastName(),
+                                    swimmer.getMemberID()
+                            );
+                            BestTimeDataManagement.swimmerTimes.add(timeRecord);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Opret en TimeRecord for svømmeren
+                 /*       BestTimeData timeRecord = new BestTimeData(
                                 timeType,
                                 discipline,
                                 LocalDate.now(),
@@ -79,4 +121,4 @@ public class TestMembers {
             }
         }
     }
-}
+}*/

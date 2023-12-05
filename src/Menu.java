@@ -6,9 +6,10 @@ public class Menu {
         public void displayMainMenu() {
                 System.out.println();
                 System.out.println("Hovedmenu:");
-                System.out.println("1. Medlemsskaber");
+                System.out.println("1. Medlemskaber");
                 System.out.println("2. Økonomi");
                 System.out.println("3. Svømmer data");
+                System.out.println("4. Holdadministration");
                 System.out.println("0. Afslut");
         }
 
@@ -39,11 +40,17 @@ public class Menu {
                 System.out.println("0. Tilbage til hovedmenu");
         }
 
-
+        public void displayTeamManagementMenu() {
+                System.out.println();
+                System.out.println("Holdadministration:");
+                System.out.println("1. Tilmeld/Fjern medlem fra hold");
+                System.out.println("2. Se svømmehold");
+                System.out.println("0. Tilbage til hovedmenu");
+        }
 
         public void runMenu() {
-                TestMembers.initializeTestMembers(); //OPRETTER TESTMEDLEMMER
-                TestMembers.generateTimesForCompetitiveSwimmers(); //Generer TESTTIDER FOR KONKURRENCESVØMMERE
+                TestMembers.initializeTestMembers(); //Opretter Testmedlemmer
+                TestMembers.generateTimesForCompetitiveSwimmers(); //Generer "Bedste tider" for konkurrencesvømmere
                 boolean running = true;
 
                 while (running) {
@@ -61,6 +68,10 @@ public class Menu {
 
                                 case "3":
                                         runSwimmerDataMenu();
+                                        break;
+
+                                case "4":
+                                        runTeamManagementMenu();
                                         break;
                                 case "0":
                                         running = false;
@@ -88,7 +99,7 @@ public class Menu {
                                         MemberManagement.createTrainer();
                                         break;
                                 case "3":
-                                        MemberManagement.handleMember();
+                                        MemberManagement.handleMemberInfo();
                                         break;
                                 case "0":
                                         memberMenuRunning = false;
@@ -140,24 +151,50 @@ public class Menu {
 
                         switch (choice) {
                                 case "1":
-                                        BestTimeDataManagement.handleTrainingTime();
+                                        BestTimeManagement.handleTrainingTime();
                                         break;
                                 case "2":
                                         //Opret metode for indtast konkurrenceresultater
-                                        BestTimeDataManagement.addCompetitionResult();
+                                        BestTimeManagement.addCompetitionResult();
                                         break;
 
                                 case "3":
                                         //Metode til at vise bedste tider i både træning og konkurrence
-                                        BestTimeDataManagement.displayBestTimes();
+                                        BestTimeManagement.displayBestTimes();
                                         break;
 
                                 case "4":
-                                        BestTimeDataManagement.displayTop5Swimmers();
+                                        BestTimeManagement.displayTop5Swimmers();
                                         break;
 
                                 case "0":
                                         swimmerDataMenuRunning = false;
+                                        break;
+                                default:
+                                        System.out.println("Ugyldigt valg. Prøv igen.");
+                        }
+                }
+        }
+
+        private void runTeamManagementMenu() {
+                boolean teamManagementMenuRunning = true;
+                TeamManagement.CreateTeams();
+
+                while (teamManagementMenuRunning) {
+                        displayTeamManagementMenu();
+                        System.out.print("Vælg en underkategori: ");
+                        String choice = scanner.nextLine();
+                        System.out.println();
+
+                        switch (choice) {
+                                case "1":
+                                        TeamManagement.handleMemberTeamAssignment();
+                                        break;
+                                case "2":
+                                        TeamManagement.showTeamsByType();
+                                        break;
+                                case "0":
+                                        teamManagementMenuRunning = false;
                                         break;
                                 default:
                                         System.out.println("Ugyldigt valg. Prøv igen.");

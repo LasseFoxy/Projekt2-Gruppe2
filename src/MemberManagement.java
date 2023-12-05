@@ -3,7 +3,6 @@ import java.time.format.*;
 import java.util.*;
 
 public class MemberManagement {
-
     private static final Scanner scanner = new Scanner(System.in);
     public static final ArrayList<Member> membersList = new ArrayList<>();
 
@@ -81,7 +80,7 @@ public class MemberManagement {
                 int memberID = findFirstAvailableMemberID();
                 Swimmer swimmer = new Swimmer(basicMemberInfo.getFirstName(), basicMemberInfo.getLastName(), basicMemberInfo.getBirthDate(), basicMemberInfo.getPhoneNumber(), basicMemberInfo.getEmail(), memberID, memberType, activityType);
                 membersList.add(swimmer);
-                System.out.println(basicMemberInfo.getFirstName() + " " + basicMemberInfo.getLastName() + " tilføjet som Svømmer med Medlems ID: " + swimmer.getMemberID());
+                System.out.println(swimmer.getShortInfo()+" tilføjet som svømmer");
 
                 //metode der skaber ny payment
                 AnnualMemberPayment.createInitialPayment(swimmer);
@@ -111,7 +110,7 @@ public class MemberManagement {
             int memberID = findFirstAvailableMemberID();
             Trainer trainer = new Trainer(basicMemberInfo.getFirstName(), basicMemberInfo.getLastName(), basicMemberInfo.getBirthDate(), basicMemberInfo.getPhoneNumber(), basicMemberInfo.getEmail(), memberID, position);
             membersList.add(trainer);
-            System.out.println(basicMemberInfo.getFirstName() + " " + basicMemberInfo.getLastName() + " tilføjet som Træner med Medlems ID: " + trainer.getMemberID());
+            System.out.println(trainer.getShortInfo()+" tilføjet som træner");
         } else {
             System.out.println("Oprettelse annulleret.");
         }
@@ -136,7 +135,7 @@ public class MemberManagement {
     }
 
     //Metode til at håndtere medlem (rediger/slet stamdata og informationer)
-    public static void handleMember() {
+    public static void handleMemberInfo() {
         while (true) {
             System.out.print("Søg efter medlem (Fornavn, Efternavn, Telefonnummer, E-mail eller Medlems ID): ");
             String searchCriteria = scanner.nextLine();
@@ -148,7 +147,7 @@ public class MemberManagement {
                 System.out.println("Ingen medlemmer fundet");
                 System.out.println("1. Søg igen");
                 System.out.println("0. Gå tilbage");
-                System.out.print("Vælg en handling: ");
+                System.out.print("Indtast valg: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine();
 
@@ -163,7 +162,7 @@ public class MemberManagement {
                 System.out.println("2. Slet medlem");
                 System.out.println("0. Gå tilbage");
 
-                System.out.print("Vælg en handling: ");
+                System.out.print("Indtast valg: ");
                 int action = scanner.nextInt();
                 scanner.nextLine();
 
@@ -185,8 +184,8 @@ public class MemberManagement {
         }
     }
 
-    //Hovedmetode for at søge efter medlemmer med søgekriterier
-    private static List<Member> searchMembers(String searchCriteria, boolean includeSwimmers, boolean includeTrainers, boolean includeCompetitiveSwimmers, boolean searchAllFields) {
+    //Hovedmetode for at søge efter medlemmer med søgekriterier (Se booleans)
+    static List<Member> searchMembers(String searchCriteria, boolean includeSwimmers, boolean includeTrainers, boolean includeCompetitiveSwimmers, boolean searchAllFields) {
         List<Member> foundMembers = new ArrayList<>();
         for (Member member : membersList) {
             boolean matchesCriteria = (searchAllFields && (
@@ -224,6 +223,10 @@ public class MemberManagement {
         return searchMembers(searchCriteria, false, false, true, false);
     }
 
+    public static List<Member> searchCompetitionSwimmersAndTrainers(String searchCriteria){
+        return searchMembers(searchCriteria, false,true,true,false);
+    }
+
     //Metode til at vælge medlem fra liste
     public static Member selectMemberFromList(List<Member> members) {
         if (members.isEmpty()) {
@@ -252,6 +255,7 @@ public class MemberManagement {
         return members.get(choice - 1);
     }
 
+
     private static void editMember(Member member) {
         boolean editing = true;
 
@@ -272,7 +276,7 @@ public class MemberManagement {
             }
                 System.out.println("0. Afslut redigering");
 
-            System.out.print("Vælg et nummer: ");
+            System.out.print("Indtast valg: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
 

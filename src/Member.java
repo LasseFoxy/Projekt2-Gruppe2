@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 // Medlemsklasse
@@ -11,7 +12,7 @@ public class Member {
     private String email;
     private int memberID;
 
-    // Constructor
+    // Konstruktør for Member
     public Member(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -21,7 +22,7 @@ public class Member {
         this.memberID = memberID;
     }
 
-    // Getters og Setters
+    // Getters og Setters for Member
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
 
@@ -40,6 +41,12 @@ public class Member {
     public int getMemberID() { return memberID; }
     public void setMemberID(int memberID) { this.memberID = memberID; }
 
+
+    //Metoder der tjekker om det er en junior eller senior
+    public String getAgeCategory() {
+        int age = Period.between(this.birthDate, LocalDate.now()).getYears();
+        return age < 18 ? "Junior" : "Senior";
+    }
 
     //metode der viser stamdata (Basic member info) inden oprettelse (uden memberID)
     public String basicInfoToString() {
@@ -66,20 +73,31 @@ public class Member {
                 "\nTelefonnummer: " + phoneNumber +
                 "\nEmail: " + email;
     }
+
+    //Metode der kun viser Fornavn, Efter, Medlems ID
+    public String getShortInfo() {
+        return this.firstName + " " + this.lastName + " (Medlems ID: " + this.memberID + ")";
+    }
 }
 
-class Trainer extends Member {
-    private String position; // Juniortræner eller Seniortræner
 
+
+
+//Trænerklasse som nedarver fra Member
+class Trainer extends Member {
+    private String position;
+
+    //Konstruktør for Trainer
     public Trainer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID, String position) {
         super(firstName, lastName, birthDate, phoneNumber, email, memberID);
         this.position = position;
     }
 
-    // Getters og Setters for 'Position' (Stilling)
+    // Getters og setters tilføjelse for trænere
     public String getPosition() { return position; }
     public void setPosition(String position) { this.position = position; }
 
+    //To String tilføjelse for trænere
     @Override
     public String toString() {
         return super.toString() +
@@ -87,23 +105,26 @@ class Trainer extends Member {
     }
 }
 
+//Svømmerklasse som nedarver fra Member
 class Swimmer extends Member {
     private String memberType; // Aktiv eller Passiv
     private String activityType; // Konkurrencesvømmer eller Fritidssvømmer
 
+    //Konstruktør svømmer
     public Swimmer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID, String memberType, String activityType) {
         super(firstName, lastName, birthDate, phoneNumber, email, memberID);
         this.memberType = memberType;
         this.activityType = activityType;
     }
 
-    // Getters og Setters for 'memberType' og 'activityType'
+    // Getters og Setters for tilføjelse for svømmere
     public String getMemberType() { return memberType; }
     public void setMemberType(String memberType) { this.memberType = memberType; }
 
     public String getActivityType() { return activityType; }
     public void setActivityType(String activityType) { this.activityType = activityType; }
 
+    //To String tilføjelse for svømmere
     @Override
     public String toString() {
         return super.toString() +

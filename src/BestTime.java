@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 
-public class BestTimeData {
+// Klasse der repræsenterer bedste svømmetider med information om medlem, tidstype, disciplin, dato og tid.
+public class BestTime {
     public enum TimeType {
         TRAINING, COMPETITION
     }
@@ -12,7 +13,8 @@ public class BestTimeData {
     private LocalDate date;
     private String time; // Tid som en streng i formatet MM:ss.hh
 
-    public BestTimeData(TimeType type, String discipline, LocalDate date, String time, String firstName, String lastName, int memberID) {
+    //Konstruktør
+    public BestTime(TimeType type, String discipline, LocalDate date, String time, String firstName, String lastName, int memberID) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.memberID = memberID;
@@ -24,7 +26,6 @@ public class BestTimeData {
     }
 
     // Getters og setters
-
     public String getFirstName() {
         return firstName;
     }

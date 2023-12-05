@@ -2,15 +2,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class BestTimeDataManagement {
+//Klasse til at håndtere bedste tider (vise, søge, oprette m.fl.)
+public class BestTimeManagement {
     private static final Scanner scanner = new Scanner(System.in);
-    public static List<BestTimeData> swimmerTimes = new ArrayList<>(); // Initialiser swimmerTimes som en tom liste i konstruktøren
+    public static List<BestTime> swimmerTimes = new ArrayList<>(); // Initialiser swimmerTimes som en tom liste i konstruktøren
 
-    public BestTimeDataManagement() {
+    public BestTimeManagement() {
         swimmerTimes = new ArrayList<>();
     }
+
     public static boolean isValidDateFormat(String dateString) {
         try {
             LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -19,29 +20,29 @@ public class BestTimeDataManagement {
             return false;
         }
     }
+
     public static boolean isValidTimeFormat(String timeString) {
         // Assuming time format is MM:ss:hh
         return timeString.matches("^([0-5][0-9]):([0-5][0-9]):([0-9][0-9])$");
     }
 
-
+    //Metode til at tilføje bedste træningstid
     public static void addTrainingTime(Member selectedSwimmer, String discipline, LocalDate date, String time) {
         int memberID = selectedSwimmer.getMemberID();
 
-        // Check if the new time is an improvement
         boolean isNewPersonalBest = isNewPersonalBest(
                 selectedSwimmer.getFirstName(),
                 selectedSwimmer.getLastName(),
                 memberID,
                 discipline,
                 time,
-                BestTimeData.TimeType.TRAINING
+                BestTime.TimeType.TRAINING
         );
 
         if (isNewPersonalBest) {
             // Add the new time as it's an improvement
-            BestTimeData record = new BestTimeData(
-                    BestTimeData.TimeType.TRAINING,
+            BestTime record = new BestTime(
+                    BestTime.TimeType.TRAINING,
                     discipline,
                     date,
                     time,
@@ -56,24 +57,23 @@ public class BestTimeDataManagement {
         }
     }
 
-
     public static void addCompetitionResult(Member selectedSwimmer, String discipline, LocalDate date, String time) {
         int memberID = selectedSwimmer.getMemberID();
 
-        // Check if the new time is an improvement
+        //Metode der tjekker om den nye bedste træningstid, virkelig er en forbedring
         boolean isNewPersonalBest = isNewPersonalBest(
                 selectedSwimmer.getFirstName(),
                 selectedSwimmer.getLastName(),
                 memberID,
                 discipline,
                 time,
-                BestTimeData.TimeType.COMPETITION
+                BestTime.TimeType.COMPETITION
         );
 
         if (isNewPersonalBest) {
             // Add the new time as it's an improvement
-            BestTimeData record = new BestTimeData(
-                    BestTimeData.TimeType.COMPETITION,
+            BestTime record = new BestTime(
+                    BestTime.TimeType.COMPETITION,
                     discipline,
                     date,
                     time,
@@ -107,7 +107,6 @@ public class BestTimeDataManagement {
             System.out.print("Vælg nummer for disciplin: ");
             int disciplineNumber = Integer.parseInt(scanner.nextLine());
 
-            // Oversæt disciplinnummer til tekst
             String discipline = translateDiscipline(disciplineNumber);
 
             if (discipline != null) {
@@ -136,12 +135,12 @@ public class BestTimeDataManagement {
         if (selectedMember != null) {
             System.out.println("Valgt medlem:");
             System.out.println(selectedMember);
-            System.out.println("Indtast disciplin: ");
+            System.out.println("Discipliner: ");
             System.out.println("Tast 1 for Crawl");
             System.out.println("Tast 2 for Rygsvømning");
             System.out.println("Tast 3 for Brystsvømning");
             System.out.println("Tast 4 for Butterfly");
-            System.out.print("Vælg nummer for disciplin: ");
+            System.out.print("Indtast valg: ");
             String discipline = scanner.nextLine();
             System.out.print("Indtast dato (dd.MM.yyyy): ");
             String dateString = scanner.nextLine();
@@ -167,15 +166,15 @@ public class BestTimeDataManagement {
             System.out.println(selectedSwimmer);
 
             // Filtrer TimeRecords for den valgte svømmer
-            List<BestTimeData> swimmerRecords = swimmerTimes.stream()
+            List<BestTime> swimmerRecords = swimmerTimes.stream()
                     .filter(timeRecord -> timeRecord.getMemberID() == selectedSwimmer.getMemberID())
                     .toList();
 
             // Vis svømmerens tider
-            System.out.println("Valgt svømmer: " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName() + " (Medlems ID: " + selectedSwimmer.getMemberID() + ")");
+            selectedSwimmer.getShortInfo();
             System.out.println("Time Records:");
 
-            for (BestTimeData timeRecord : swimmerRecords) {
+            for (BestTime timeRecord : swimmerRecords) {
                 System.out.println("Type: " + timeRecord.getType());
                 System.out.println("Discipline: " + timeRecord.getDiscipline());
                 System.out.println("Date: " + timeRecord.getDate());
@@ -186,18 +185,18 @@ public class BestTimeDataManagement {
             System.out.println("Ingen medlemmer fundet eller ugyldigt valg.");
         }
     } // Metode der tjekker om den nye oplyste tid er en ny personly rekord eller ej
-    public static boolean isNewPersonalBest(String firstName, String lastName, int memberID, String discipline, String newTime, BestTimeData.TimeType newTimeType) {
-        boolean isCompetitionTime = newTimeType == BestTimeData.TimeType.COMPETITION;
+    public static boolean isNewPersonalBest(String firstName, String lastName, int memberID, String discipline, String newTime, BestTime.TimeType newTimeType) {
+        boolean isCompetitionTime = newTimeType == BestTime.TimeType.COMPETITION;
 
         // Find existing records for the same swimmer, discipline, and time type
-        List<BestTimeData> existingRecords = swimmerTimes.stream()
+        List<BestTime> existingRecords = swimmerTimes.stream()
                 .filter(timeRecord ->
                         timeRecord.getFirstName().equals(firstName) &&
                                 timeRecord.getLastName().equals(lastName) &&
                                 timeRecord.getMemberID() == memberID &&
                                 timeRecord.getDiscipline().equalsIgnoreCase(discipline) &&
                                 timeRecord.getType() == newTimeType)
-                .collect(Collectors.toList());
+                .toList();
 
         // If no records exist, it's a new personal best
         if (existingRecords.isEmpty()) {
@@ -205,7 +204,7 @@ public class BestTimeDataManagement {
         }
 
         // Compare the new time with existing records
-        for (BestTimeData timeRecord : existingRecords) {
+        for (BestTime timeRecord : existingRecords) {
             if (compareTimes(newTime, timeRecord.getTime()) >= 0) {
                 return false; // New time is slower or equal to an existing record
             }
@@ -214,50 +213,6 @@ public class BestTimeDataManagement {
         return true; // New time is faster than all existing records
     }
 
-    /*public static void displayTop5SwimmersByDiscipline(String discipline, TimeRecord.TimeType timeType) {
-        // Filtrer TimeRecords for den specifikke disciplin og tidstype
-        List<TimeRecord> filteredRecords = new ArrayList<>();
-        for (TimeRecord timeRecord : swimmerTimes) {
-            if (timeRecord.getDiscipline().equalsIgnoreCase(discipline) && timeRecord.getType() == timeType) {
-                filteredRecords.add(timeRecord);
-            }
-        }
-
-        // Opret et ArrayList til at gemme den bedste tid for hver svømmer
-        List<String> bestTimesList = new ArrayList<>();
-
-        for (TimeRecord timeRecord : filteredRecords) {
-            int memberID = timeRecord.getMemberID();
-            String currentTime = timeRecord.getTime();
-
-            // Find den bedste tid for hver svømmer og tilføj den til bestTimesList
-            boolean foundBestTime = false;
-            for (int i = 0; i < bestTimesList.size(); i++) {
-                if (bestTimesList.get(i) == null) {
-                    bestTimesList.set(i, currentTime);
-                    foundBestTime = true;
-                    break;
-                } else if (compareTimes(currentTime, bestTimesList.get(i)) < 0) {
-                    bestTimesList.add(i, currentTime);
-                    foundBestTime = true;
-                    break;
-                }
-            }
-            if (!foundBestTime) {
-                bestTimesList.add(currentTime);
-            }
-        }
-
-        // Vis de top 5 svømmere med deres bedste tid
-        System.out.println("Top 5 svømmere i " + discipline + " (" + timeType + "):");
-        for (int i = 0; i < Math.min(5, bestTimesList.size()); i++) {
-            String bestTime = bestTimesList.get(i);
-            TimeRecord topSwimmerRecord = filteredRecords.get(i);
-            String swimmerName = topSwimmerRecord.getFirstName() + " " + topSwimmerRecord.getLastName();
-            int memberID = topSwimmerRecord.getMemberID();
-            System.out.println(swimmerName + " (Medlems ID: " + memberID + ") - Bedste tid: " + bestTime);
-        }
-    }*/
 
     // Hjælpefunktion til at sammenligne to tider i formatet MM:ss:hh
     public static int compareTimes(String time1, String time2) {
@@ -302,7 +257,7 @@ public class BestTimeDataManagement {
 
     public static void displayTop5Swimmers() {
         // Opret en Comparator for at sammenligne TimeRecords baseret på tid
-        Comparator<BestTimeData> timeRecordComparator = (record1, record2) -> {
+        Comparator<BestTime> timeRecordComparator = (record1, record2) -> {
             String time1 = record1.getTime();
             String time2 = record2.getTime();
             return compareTimes(time1, time2);
@@ -312,10 +267,10 @@ public class BestTimeDataManagement {
         List<String> disciplines = new ArrayList<>();
 
         // Lav en liste til tiderne for hver disciplin
-        List<List<BestTimeData>> disciplineTimes = new ArrayList<>();
+        List<List<BestTime>> disciplineTimes = new ArrayList<>();
 
         // Opdel tiderne i discipliner
-        for (BestTimeData timeRecord : swimmerTimes) {
+        for (BestTime timeRecord : swimmerTimes) {
             String discipline = timeRecord.getDiscipline();
             int disciplineIndex = disciplines.indexOf(discipline);
 
@@ -333,7 +288,7 @@ public class BestTimeDataManagement {
         // Sorter tiderne for hver disciplin baseret på tid i stigende rækkefølge
         for (int i = 0; i < disciplines.size(); i++) {
             String discipline = disciplines.get(i);
-            List<BestTimeData> times = disciplineTimes.get(i);
+            List<BestTime> times = disciplineTimes.get(i);
             times.sort(timeRecordComparator);
 
             // Opret en HashSet for at holde styr på, hvilke svømmere der allerede er blevet vist
@@ -342,7 +297,7 @@ public class BestTimeDataManagement {
             // Vis de top 5 tider for disciplinen
             System.out.println("Top 5 tider for disciplin \"" + discipline + "\":");
             int count = 0;
-            for (BestTimeData timeRecord : times) {
+            for (BestTime timeRecord : times) {
                 // Tjek om svømmeren allerede er blevet vist
                 if (!shownSwimmers.contains(timeRecord.getMemberID())) {
                     String bestTime = timeRecord.getTime();
@@ -362,9 +317,7 @@ public class BestTimeDataManagement {
         }
     }
 
-
-
-    // Metode til at oversætte disciplinnummer til tekst
+    // Metode til at oversætte disciplin casenummer til tekst
     private static String translateDiscipline(int disciplineNumber) {
         return switch (disciplineNumber) {
             case 1 -> "Crawl";

@@ -47,14 +47,14 @@ public class TestMembers {
     public static void generateTimesForCompetitiveSwimmers() {
         Random random = new Random();
         String[] disciplines = {"Crawl", "Brystsvømning", "Rygsvømning", "Butterfly"};
-        BestTimeData.TimeType[] timeTypes = {BestTimeData.TimeType.TRAINING, BestTimeData.TimeType.COMPETITION};
+        BestTime.TimeType[] timeTypes = {BestTime.TimeType.TRAINING, BestTime.TimeType.COMPETITION};
 
         for (Member member : MemberManagement.membersList) {
             if (member instanceof Swimmer && ((Swimmer) member).getActivityType().equals("Konkurrencesvømmer")) {
                 Swimmer swimmer = (Swimmer) member;
 
                 for (String discipline : disciplines) {
-                    for (BestTimeData.TimeType timeType : timeTypes) {
+                    for (BestTime.TimeType timeType : timeTypes) {
                         int minutes = random.nextInt(2); // Random minut
                         int seconds = random.nextInt(60); // Random sekund fra 0 til 59
                         int hundredths = random.nextInt(100); // Random hundrededele fra 0 til 99
@@ -62,18 +62,18 @@ public class TestMembers {
                         String time = String.format("%02d:%02d:%02d", minutes, seconds, hundredths);
 
                         // Check if the generated time is a new personal best for competition
-                        boolean isNewPersonalBest = BestTimeDataManagement.isNewPersonalBest(
+                        boolean isNewPersonalBest = BestTimeManagement.isNewPersonalBest(
                                 swimmer.getFirstName(),
                                 swimmer.getLastName(),
                                 swimmer.getMemberID(),
                                 discipline,
                                 time,
-                                BestTimeData.TimeType.COMPETITION
+                                BestTime.TimeType.COMPETITION
                         );
 
                         // If it's a competition time and a new personal best, add it to the records
-                        if (timeType == BestTimeData.TimeType.COMPETITION && isNewPersonalBest) {
-                            BestTimeData timeRecord = new BestTimeData(
+                        if (timeType == BestTime.TimeType.COMPETITION && isNewPersonalBest) {
+                            BestTime timeRecord = new BestTime(
                                     timeType,
                                     discipline,
                                     LocalDate.now(),
@@ -82,10 +82,10 @@ public class TestMembers {
                                     swimmer.getLastName(),
                                     swimmer.getMemberID()
                             );
-                            BestTimeDataManagement.swimmerTimes.add(timeRecord);
-                        } else if (timeType == BestTimeData.TimeType.TRAINING) {
+                            BestTimeManagement.swimmerTimes.add(timeRecord);
+                        } else if (timeType == BestTime.TimeType.TRAINING) {
                             // Add all practice times without checking if they are personal bests
-                            BestTimeData timeRecord = new BestTimeData(
+                            BestTime timeRecord = new BestTime(
                                     timeType,
                                     discipline,
                                     LocalDate.now(),
@@ -94,7 +94,7 @@ public class TestMembers {
                                     swimmer.getLastName(),
                                     swimmer.getMemberID()
                             );
-                            BestTimeDataManagement.swimmerTimes.add(timeRecord);
+                            BestTimeManagement.swimmerTimes.add(timeRecord);
                         }
                     }
                 }

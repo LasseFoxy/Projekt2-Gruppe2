@@ -2,14 +2,16 @@ import java.time.*;
 import java.util.*;
 import java.time.format.DateTimeFormatter;
 
+//Klasse for årligt kontingentbetaling (inkluderer arrayliste med betalinger betalt/ubetalt/restance)
 public class AnnualMemberPayment {
     private static final Scanner scanner = new Scanner(System.in);
     public static final ArrayList<AnnualMemberPayment> paymentList = new ArrayList<>();
-    private Member member;
+    private final Member member;
     private LocalDate paymentDueDate;
     private boolean isPaid;
     private double amount;
 
+    //Konstruktør
     public AnnualMemberPayment(Member member, LocalDate paymentDueDate) {
         this.member = member;
         this.paymentDueDate = paymentDueDate;
@@ -55,14 +57,14 @@ public class AnnualMemberPayment {
         return amount;
     }
 
-    // Metode til at oprette regning for første kontingentbetaling (betalingsdato = et år efter oprettelse af svømmeren)
+    // Metode til at oprette regning for første kontingentbetaling (betalingsdato = et år efter dato for oprettelse af svømmeren)
     public static void createInitialPayment(Member member) {
         LocalDate paymentDueDate = LocalDate.now().plusYears(1);
         AnnualMemberPayment newPayment = new AnnualMemberPayment(member, paymentDueDate);
         paymentList.add(newPayment);
     }
 
-    // Metode til at oprette en ny betaling
+    // Metode til at oprette en ny betaling når regning er betalt (Betalingsdato tidligere betalingsdato + 1 år)
     private static void createNewPayment(AnnualMemberPayment payment) {
         LocalDate nextPaymentDate = payment.getPaymentDueDate().plusYears(1);
         AnnualMemberPayment newPayment = new AnnualMemberPayment(payment.getMember(), nextPaymentDate);
@@ -91,6 +93,7 @@ public class AnnualMemberPayment {
         return foundPayments;
     }
 
+    // Metode til at vælge betaling fra den fremviste søgeliste
     private static AnnualMemberPayment selectPaymentFromList(List<AnnualMemberPayment> payments) {
         if (payments.size() == 1) {
             return payments.get(0);
@@ -153,6 +156,7 @@ public class AnnualMemberPayment {
         }
     }
 
+    //To String
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -169,20 +173,21 @@ public class AnnualMemberPayment {
     // Metode til at beregne kontingentbeløbet
     public void calculateMembershipFee(Member member) {
         int age = Period.between(member.getBirthDate(), LocalDate.now()).getYears();
-        boolean isSenior = age >= 60;
+        boolean isElderlySenior = age >= 60;
         boolean isActive = member instanceof Swimmer && ((Swimmer) member).getMemberType().equals("Aktiv");
 
         if (isActive) {
             if (age < 18) {
-                amount = 1000; // Ungdomssvømmer
+                amount = 1000; // Juniorsvømmer
             } else {
-                amount = isSenior ? 1200 : 1600; // Senior med rabat eller uden rabat
+                amount = isElderlySenior ? 1200 : 1600; // Senior eller ældre senior (rabat for personer >= 60 år)
             }
         } else {
             amount = 500; // Passivt medlemskab
         }
     }
 
+    //Metode til at vise fremtidige betalinger
     public static void displayUpcomingPayments(ArrayList<AnnualMemberPayment> payments) {
         boolean foundUnpaid = false;
         System.out.println("Betalinger: ");
@@ -206,6 +211,7 @@ public class AnnualMemberPayment {
         }
     }
 
+    //Metode til at vise betalinger i restance
     public static void displayPaymentsOverdue() {
         boolean foundOverdue = false;
 

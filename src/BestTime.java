@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 // Klasse der repræsenterer bedste svømmetider med information om medlem, tidstype, disciplin, dato og tid.
 public class BestTime {
@@ -81,5 +82,16 @@ public class BestTime {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String typeInDanish = this.type == TimeType.TRAINING ? "Træning" : "Konkurrence";
+        return String.format("Disciplin: %-12s \t Type: %-10s \t Dato: %-10s \t Tid: %-8s",
+                this.discipline,
+                typeInDanish,
+                this.date.format(formatter),
+                this.time);
     }
 }

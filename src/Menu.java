@@ -35,8 +35,9 @@ public class Menu {
                 System.out.println("Svømmer data:");
                 System.out.println("1. Tilføj ny bedste træningstid");
                 System.out.println("2. Tilføj konkurrence resultater");
-                System.out.println("3. Vis bedste tider (Træning og Konkurrence)");
-                System.out.println("4. Vis top 5 svømmere efter disciplin");
+                System.out.println("3. Vis konkurrenceresultater");
+                System.out.println("4. Vis bedste tider for svømmer (Træning og Konkurrence)");
+                System.out.println("5. Vis top 5 svømmere efter disciplin");
                 System.out.println("0. Tilbage til hovedmenu");
         }
 
@@ -154,16 +155,17 @@ public class Menu {
                                         BestTimeManagement.handleTrainingTime();
                                         break;
                                 case "2":
-                                        //Opret metode for indtast konkurrenceresultater
-                                        BestTimeManagement.addCompetitionResult();
+                                        CompetitionEventManagement.handleCompetitionEvent();
                                         break;
-
                                 case "3":
-                                        //Metode til at vise bedste tider i både træning og konkurrence
-                                        BestTimeManagement.displayBestTimes();
+                                        CompetitionEventManagement.searchAnDisplayCompetitionResults();
                                         break;
 
                                 case "4":
+                                        BestTimeManagement.displayBestTimes();
+                                        break;
+
+                                case "5":
                                         BestTimeManagement.displayTop5Swimmers();
                                         break;
 

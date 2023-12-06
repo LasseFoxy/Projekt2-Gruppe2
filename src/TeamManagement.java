@@ -74,16 +74,12 @@ public class TeamManagement {
     }
 
     private static void removeMemberFromTeam(Member member) {
-        List<Team> medlemsHold = new ArrayList<>();
-        int teamsAssignedToCount = 1;
         System.out.println("\nVælg et hold som medlemmet skal fjernes fra: ");
-
-        // Find og vis hold, som medlemmet er en del af
+        List<Team> medlemsHold = new ArrayList<>();
         for (Team team : holdListe) {
             if (team.getMedlemmer().contains(member)) {
                 medlemsHold.add(team);
-                System.out.println(teamsAssignedToCount + ". " + team.getHoldNavn() + " " + team.getHoldNummer());
-                teamsAssignedToCount++;
+                System.out.println((medlemsHold.size()) + ". " + team.getHoldNavn() + " " + team.getHoldNummer());
             }
         }
 
@@ -94,17 +90,15 @@ public class TeamManagement {
 
         System.out.print("Indtast valg: ");
         int choice = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Ryd bufferen efter int-input
 
-        if (choice < 1 || choice > medlemsHold.size()) {
+        if (choice > 0 && choice <= medlemsHold.size()) {
+            Team selectedTeam = medlemsHold.get(choice - 1);
+            selectedTeam.removeMedlem(member);
+            System.out.println(member.getShortInfo() + " fjernet fra holdet: " + selectedTeam.getHoldNavn());
+        } else {
             System.out.println("Ugyldigt valg.");
-            return;
         }
-
-        // Fjern medlemmet fra det valgte hold
-        Team selectedTeam = medlemsHold.get(choice - 1);
-        selectedTeam.removeMedlem(member);
-        System.out.println("\n"+member.getShortInfo() + " er fjernet fra holdet: " + selectedTeam.getHoldNavn() + " " + selectedTeam.getHoldNummer());
     }
 
     public static void showTeamsByType() {
@@ -112,7 +106,7 @@ public class TeamManagement {
         System.out.println("1. Vis juniorhold");
         System.out.println("2. Vis seniorhold");
         System.out.println("3. Vis motionshold");
-        System.out.print("Indtast valg (1-3): ");
+        System.out.print("Indtast valg: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
         System.out.println();
@@ -141,4 +135,3 @@ public class TeamManagement {
         }
     }
 }
-

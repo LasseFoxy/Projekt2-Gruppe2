@@ -235,7 +235,7 @@ public class MemberManagement {
 
         System.out.println("\nMedlemmer: ");
         for (int i = 0; i < members.size(); i++) {
-            System.out.println((i + 1) + ". " + memberSummary(members.get(i)));
+            System.out.println((i + 1) + ". " + members.get(i).getShortInfo());
         }
 
         System.out.print("Vælg et nummer eller tryk 0 for at gå tilbage: ");
@@ -335,5 +335,3 @@ public class MemberManagement {
         }
     }
 }
-
-

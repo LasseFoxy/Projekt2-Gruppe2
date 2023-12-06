@@ -6,7 +6,7 @@ import java.util.*;
 //Klasse til at håndtere bedste tider (vise, søge, oprette m.fl.)
 public class BestTimeManagement {
     private static final Scanner scanner = new Scanner(System.in);
-    public static List<BestTime> swimmerTimes = new ArrayList<>(); // Initialiser swimmerTimes som en tom liste i konstruktøren
+    public static List<BestTime> swimmerTimes = new ArrayList<>();
 
     public BestTimeManagement() {
         swimmerTimes = new ArrayList<>();
@@ -26,7 +26,7 @@ public class BestTimeManagement {
         return timeString.matches("^([0-5][0-9]):([0-5][0-9]):([0-9][0-9])$");
     }
 
-    //Metode til at tilføje bedste træningstid
+    //Metode til at tilføje ny bedste træningstid i en disciplin
     public static void addTrainingTime(Member selectedSwimmer, String discipline, LocalDate date, String time) {
         int memberID = selectedSwimmer.getMemberID();
 
@@ -40,53 +40,38 @@ public class BestTimeManagement {
         );
 
         if (isNewPersonalBest) {
-            // Add the new time as it's an improvement
-            BestTime record = new BestTime(
-                    BestTime.TimeType.TRAINING,
-                    discipline,
-                    date,
-                    time,
-                    selectedSwimmer.getFirstName(),
-                    selectedSwimmer.getLastName(),
-                    memberID
-            );
-            swimmerTimes.add(record);
-            System.out.println("Træningstid tilføjet for " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName());
+            // Vis den nye tidsregistrering for brugeren og spørg om bekræftelse
+            System.out.println("Ny træningstid registreret: " + discipline + " - " + date + " - " + time);
+            System.out.println("Bekræft tilføjelse af ny tid (1 for Ja, 2 for Nej): ");
+            int confirm = scanner.nextInt();
+            scanner.nextLine();
+
+            if (confirm == 1) {
+                // Fjern den gamle tid
+                BestTimeManagement.swimmerTimes.removeIf(t -> t.getMemberID() == memberID &&
+                        t.getDiscipline().equalsIgnoreCase(discipline) &&
+                        t.getType() == BestTime.TimeType.TRAINING);
+
+                // Tilføj den nye tid
+                BestTime record = new BestTime(
+                        BestTime.TimeType.TRAINING,
+                        discipline,
+                        date,
+                        time,
+                        selectedSwimmer.getFirstName(),
+                        selectedSwimmer.getLastName(),
+                        memberID
+                );
+                swimmerTimes.add(record);
+                System.out.println("Træningstid bekræftet og tilføjet for " + selectedSwimmer.getShortInfo());
+            } else {
+                System.out.println("Tilføjelse af ny tid annulleret.");
+            }
         } else {
-            System.out.println("Den indtastede tid er ikke forbedret.");
+            System.out.println("Den indtastede tid er ikke en forbedring.");
         }
     }
 
-    public static void addCompetitionResult(Member selectedSwimmer, String discipline, LocalDate date, String time) {
-        int memberID = selectedSwimmer.getMemberID();
-
-        //Metode der tjekker om den nye bedste træningstid, virkelig er en forbedring
-        boolean isNewPersonalBest = isNewPersonalBest(
-                selectedSwimmer.getFirstName(),
-                selectedSwimmer.getLastName(),
-                memberID,
-                discipline,
-                time,
-                BestTime.TimeType.COMPETITION
-        );
-
-        if (isNewPersonalBest) {
-            // Add the new time as it's an improvement
-            BestTime record = new BestTime(
-                    BestTime.TimeType.COMPETITION,
-                    discipline,
-                    date,
-                    time,
-                    selectedSwimmer.getFirstName(),
-                    selectedSwimmer.getLastName(),
-                    memberID
-            );
-            swimmerTimes.add(record);
-            System.out.println("Konkurrence resultat tilføjet for " + selectedSwimmer.getFirstName() + " " + selectedSwimmer.getLastName());
-        } else {
-            System.out.println("Den indtastede tid er ikke forbedret.");
-        }
-    }
 
     public static void handleTrainingTime() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
@@ -97,7 +82,7 @@ public class BestTimeManagement {
 
         if (selectedMember != null) {
             System.out.println("Valgt medlem:");
-            System.out.println(selectedMember);
+            System.out.println(selectedMember.getShortInfo());
 
             // Indtast disciplinen som et tal
             System.out.println("Tast 1 for Crawl");
@@ -125,35 +110,6 @@ public class BestTimeManagement {
         }
     }
 
-    public static void addCompetitionResult() {
-        System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
-        String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = MemberManagement.searchOnlyCompetitionSwimmers(searchCriteria);
-        Member selectedMember = MemberManagement.selectMemberFromList(foundMembers);
-        System.out.println();
-
-        if (selectedMember != null) {
-            System.out.println("Valgt medlem:");
-            System.out.println(selectedMember);
-            System.out.println("Discipliner: ");
-            System.out.println("Tast 1 for Crawl");
-            System.out.println("Tast 2 for Rygsvømning");
-            System.out.println("Tast 3 for Brystsvømning");
-            System.out.println("Tast 4 for Butterfly");
-            System.out.print("Indtast valg: ");
-            String discipline = scanner.nextLine();
-            System.out.print("Indtast dato (dd.MM.yyyy): ");
-            String dateString = scanner.nextLine();
-            LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            System.out.print("Indtast tid (MM:ss:hh): ");
-            String time = scanner.nextLine();
-
-            addCompetitionResult((Swimmer) selectedMember, discipline, date, time);
-        } else {
-            System.out.println("Ingen medlemmer fundet eller ugyldigt valg.");
-        }
-    }
-
     public static void displayBestTimes() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
@@ -162,29 +118,26 @@ public class BestTimeManagement {
         System.out.println();
 
         if (selectedSwimmer != null) {
-            System.out.println("Valgt medlem:");
-            System.out.println(selectedSwimmer);
-
-            // Filtrer TimeRecords for den valgte svømmer
+            // Filtrer tider for den valgte svømmer
             List<BestTime> swimmerRecords = swimmerTimes.stream()
                     .filter(timeRecord -> timeRecord.getMemberID() == selectedSwimmer.getMemberID())
+                    .sorted(Comparator.comparing(BestTime::getDiscipline)
+                            .thenComparing(BestTime::getType))
                     .toList();
 
             // Vis svømmerens tider
-            selectedSwimmer.getShortInfo();
-            System.out.println("Time Records:");
-
+            System.out.println("Tidsrekorder for " + selectedSwimmer.getShortInfo() + ":");
             for (BestTime timeRecord : swimmerRecords) {
-                System.out.println("Type: " + timeRecord.getType());
-                System.out.println("Discipline: " + timeRecord.getDiscipline());
-                System.out.println("Date: " + timeRecord.getDate());
-                System.out.println("Time: " + timeRecord.getTime());
-                System.out.println();
+                System.out.println(timeRecord.toString());
             }
+            System.out.println("Tryk på Enter for at fortsætte...");
+            scanner.nextLine();
         } else {
             System.out.println("Ingen medlemmer fundet eller ugyldigt valg.");
         }
-    } // Metode der tjekker om den nye oplyste tid er en ny personly rekord eller ej
+    }
+
+    // Metode der tjekker om den nye oplyste tid er en ny personly rekord eller ej
     public static boolean isNewPersonalBest(String firstName, String lastName, int memberID, String discipline, String newTime, BestTime.TimeType newTimeType) {
         boolean isCompetitionTime = newTimeType == BestTime.TimeType.COMPETITION;
 
@@ -313,12 +266,12 @@ public class BestTimeManagement {
                     shownSwimmers.add(timeRecord.getMemberID());
                 }
             }
-            System.out.println(); // En tom linje mellem discipliner
+            System.out.println();
         }
     }
 
     // Metode til at oversætte disciplin casenummer til tekst
-    private static String translateDiscipline(int disciplineNumber) {
+    public static String translateDiscipline(int disciplineNumber) {
         return switch (disciplineNumber) {
             case 1 -> "Crawl";
             case 2 -> "Rygsvømning";

@@ -46,7 +46,7 @@ public class TestMembers {
 
     public static void generateTimesForCompetitiveSwimmers() {
         Random random = new Random();
-        String[] disciplines = {"Crawl", "Brystsvømning", "Rygsvømning", "Butterfly"};
+        String[] disciplines = {"Crawl", "Rygsvømning", "Brystsvømning", "Butterfly"};
         BestTime.TimeType[] timeTypes = {BestTime.TimeType.TRAINING, BestTime.TimeType.COMPETITION};
 
         for (Member member : MemberManagement.membersList) {
@@ -102,23 +102,3 @@ public class TestMembers {
         }
     }
 }
-
-// Opret en TimeRecord for svømmeren
-                 /*       BestTimeData timeRecord = new BestTimeData(
-                                timeType,
-                                discipline,
-                                LocalDate.now(),
-                                time,
-                                swimmer.getFirstName(),
-                                swimmer.getLastName(),
-                                swimmer.getMemberID()
-                        );
-
-                        // Tilføj TimeRecord til BestSwimmerTimes.swimmerTimes
-                        BestTimeDataManagement.swimmerTimes.add(timeRecord);
-                    }
-                }
-            }
-        }
-    }
-}*/

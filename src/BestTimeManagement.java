@@ -97,9 +97,23 @@ public class BestTimeManagement {
             if (discipline != null) {
                 System.out.print("Indtast dato (dd.MM.yyyy): ");
                 String dateString = scanner.nextLine();
+
+                // Validate date input
+                while (!isValidDateFormat(dateString)) {
+                    System.out.println("Ugyldigt datoformat. Indtast igen (dd.MM.yyyy): ");
+                    dateString = scanner.nextLine();
+                }
+
                 LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+
                 System.out.print("Indtast tid (MM:ss:hh): ");
                 String time = scanner.nextLine();
+
+                // Validate time input
+                while (!isValidTimeFormat(time)) {
+                    System.out.println("Ugyldigt tidsformat. Indtast igen (MM:ss:hh): ");
+                    time = scanner.nextLine();
+                }
 
                 addTrainingTime(selectedMember, discipline, date, time);
             } else {

@@ -13,16 +13,8 @@ public class MemberManagement {
             System.out.print("Indtast efternavn: ");
             String lastName = scanner.nextLine();
 
-            LocalDate birthDate = null;
-            while (birthDate == null) {
-                System.out.print("Indtast fødseldato (dd.mm.yyyy): ");
-                String birthDateString = scanner.nextLine();
-                try {
-                    birthDate = LocalDate.parse(birthDateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                } catch (DateTimeParseException e) {
-                    System.out.println("Ugyldig indtasting, prøv igen.");
-                }
-            }
+            Scanner scanner = new Scanner(System.in);
+            LocalDate birthDate = SearchMethods.promptForDate(scanner, "Indtast fødselsdato (dd.mm.yyyy): ");
 
             String phoneNumber = null;
             while (phoneNumber == null) {
@@ -45,29 +37,11 @@ public class MemberManagement {
         public static void createSwimmer() {
             Member basicMemberInfo = gatherBasicMemberInfo();
 
-            int memberTypeChoice;
-            String memberType;
-            do {
-                System.out.print("Vælg medlemstype: 1 for Aktiv, 2 for Passiv: ");
-                memberTypeChoice = scanner.nextInt();
-                if (memberTypeChoice != 1 && memberTypeChoice != 2) {
-                    System.out.println("Ugyldigt valg. Prøv igen.");
-                }
-            } while (memberTypeChoice != 1 && memberTypeChoice != 2);
-            memberType = memberTypeChoice == 1 ? "Aktiv" : "Passiv";
-            scanner.nextLine();
+            int memberTypeChoice = SearchMethods.promptForChoice(scanner, "Vælg medlemstype: 1 for Aktiv, 2 for Passiv: ", 1, 2);
+            String memberType = memberTypeChoice == 1 ? "Aktiv" : "Passiv";
 
-            int activityTypeChoice;
-            String activityType;
-            do {
-                System.out.print("Vælg aktivitetstype: 1 for Konkurrencesvømmer, 2 for Fritidssvømmer: ");
-                activityTypeChoice = scanner.nextInt();
-                if (activityTypeChoice != 1 && activityTypeChoice != 2) {
-                    System.out.println("Ugyldigt valg. Prøv igen.");
-                }
-            } while (activityTypeChoice != 1 && activityTypeChoice != 2);
-            activityType = activityTypeChoice == 1 ? "Konkurrencesvømmer" : "Fritidssvømmer";
-            scanner.nextLine();
+            int activityTypeChoice = SearchMethods.promptForChoice(scanner, "Vælg aktivitetstype: 1 for Konkurrencesvømmer, 2 for Fritidssvømmer: ", 1, 2);
+            String activityType = activityTypeChoice == 1 ? "Konkurrencesvømmer" : "Fritidssvømmer";
 
             System.out.println("\nIndtastede data:");
             System.out.println(basicMemberInfo.basicInfoToString());

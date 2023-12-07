@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class SearchMethods {
@@ -111,4 +114,45 @@ public class SearchMethods {
         return payments.get(choice - 1);
     }
 
+
+    public static int promptForChoice(Scanner scanner, String prompt, int... validChoices) {
+        int choice;
+        boolean isValidChoice;
+        do {
+            System.out.print(prompt);
+            while (!scanner.hasNextInt()) {
+                System.out.println("Det skal være et tal. Prøv igen.");
+                System.out.print(prompt);
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+            isValidChoice = false;
+
+            for (int validChoice : validChoices) {
+                if (choice == validChoice) {
+                    isValidChoice = true;
+                    break;
+                }
+            }
+
+            if (!isValidChoice) {
+                System.out.println("Ugyldigt valg. Prøv igen.");
+            }
+        } while (!isValidChoice);
+        return choice;
+    }
+
+    public static LocalDate promptForDate(Scanner scanner, String prompt) {
+        LocalDate date = null;
+        while (date == null) {
+            System.out.print(prompt);
+            String dateString = scanner.nextLine();
+            try {
+                date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            } catch (DateTimeParseException e) {
+                System.out.println("Ugyldig indtasting, prøv igen.");
+            }
+        }
+        return date;
+    }
 }

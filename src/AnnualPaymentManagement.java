@@ -1,126 +1,40 @@
-import java.time.*;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
-import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
-//Klasse for årligt kontingentbetaling (inkluderer arrayliste med betalinger betalt/ubetalt/restance)
-public class AnnualMemberPayment {
+public class AnnualPaymentManagement {
     private static final Scanner scanner = new Scanner(System.in);
-    public static final ArrayList<AnnualMemberPayment> paymentList = new ArrayList<>();
-    private final Member member;
-    private LocalDate paymentDueDate;
-    private boolean isPaid;
-    private double amount;
-
-    //Konstruktør
-    public AnnualMemberPayment(Member member, LocalDate paymentDueDate) {
-        this.member = member;
-        this.paymentDueDate = paymentDueDate;
-        this.isPaid = false;
-        calculateMembershipFee(member);
-    }
-
-    // Getters og setters
-    public String getMemberFirstName() {
-        return member.getFirstName();
-    }
-
-    public String getMemberLastName() {
-        return member.getLastName();
-    }
-
-    public int getMemberID() {
-        return member.getMemberID();
-    }
-
-    public LocalDate getPaymentDueDate() {
-        return paymentDueDate;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setPaymentDueDate(LocalDate paymentDueDate) {
-        this.paymentDueDate = paymentDueDate;
-    }
-
-    public boolean getIsPaid() {
-        return isPaid;
-    }
-
-    public void setIsPaid(boolean isPaid) {
-        this.isPaid = isPaid;
-    }
-
-
-    public double getAmount() {
-        return amount;
-    }
+    public static final ArrayList<AnnualPayment> paymentList = new ArrayList<>();
 
     // Metode til at oprette regning for første kontingentbetaling (betalingsdato = et år efter dato for oprettelse af svømmeren)
     public static void createInitialPayment(Member member) {
         LocalDate paymentDueDate = LocalDate.now().plusYears(1);
-        AnnualMemberPayment newPayment = new AnnualMemberPayment(member, paymentDueDate);
+        AnnualPayment newPayment = new AnnualPayment(member, paymentDueDate);
         paymentList.add(newPayment);
     }
 
     // Metode til at oprette en ny betaling når regning er betalt (Betalingsdato tidligere betalingsdato + 1 år)
-    private static void createNewPayment(AnnualMemberPayment payment) {
+    private static void createNewPayment(AnnualPayment payment) {
         LocalDate nextPaymentDate = payment.getPaymentDueDate().plusYears(1);
-        AnnualMemberPayment newPayment = new AnnualMemberPayment(payment.getMember(), nextPaymentDate);
+        AnnualPayment newPayment = new AnnualPayment(payment.getMember(), nextPaymentDate);
         paymentList.add(newPayment);
         System.out.println("Ny betaling oprettet med forfaldsdato: " + nextPaymentDate);
     }
 
     // Metode til at markere betaling som betalt
-    private static void markAsPaid(AnnualMemberPayment payment) {
+    private static void markAsPaid(AnnualPayment payment) {
         payment.setIsPaid(true); // Antag at Payment klassen har en metode setPaid
         System.out.println("Betaling for medlemmet " + payment.getMemberFirstName() + " " + payment.getMemberLastName() + " er markeret som betalt.");
     }
 
-    // Metode til at søge efter payments (søgning efter Navn eller Medlems ID)
-    private static List<AnnualMemberPayment> searchPayments(String searchCriteria) {
-        List<AnnualMemberPayment> foundPayments = new ArrayList<>();
-        for (AnnualMemberPayment payment : paymentList) {
-            boolean matchesCriteria = payment.getMemberFirstName().equalsIgnoreCase(searchCriteria) ||
-                    payment.getMemberLastName().equalsIgnoreCase(searchCriteria) ||
-                    Integer.toString(payment.getMemberID()).equalsIgnoreCase(searchCriteria);
-
-            if (matchesCriteria) {
-                foundPayments.add(payment);
-            }
-        }
-        return foundPayments;
-    }
-
-    // Metode til at vælge betaling fra den fremviste søgeliste
-    private static AnnualMemberPayment selectPaymentFromList(List<AnnualMemberPayment> payments) {
-        if (payments.size() == 1) {
-            return payments.get(0);
-        }
-
-        for (int i = 0; i < payments.size(); i++) {
-            System.out.println((i + 1) + ". " + payments.get(i));
-        }
-
-        System.out.print("Vælg en betaling: \n");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        if (choice < 1 || choice > payments.size()) {
-            System.out.println("Ugyldigt valg.");
-            return null;
-        }
-
-        return payments.get(choice - 1);
-    }
 
     // Metode til at håndtere betalingsprocessen
     public static void handlePayment() {
         System.out.print("Søg efter betaling (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
         System.out.println();
-        List<AnnualMemberPayment> foundPayments = searchPayments(searchCriteria);
+        List<AnnualPayment> foundPayments = SearchMethods.searchPayments(searchCriteria);
 
         if (foundPayments.isEmpty()) {
             System.out.println("Ingen betalinger fundet.");
@@ -128,7 +42,7 @@ public class AnnualMemberPayment {
         }
 
         System.out.println("Betalinger: ");
-        AnnualMemberPayment selectedPayment = selectPaymentFromList(foundPayments);
+        AnnualPayment selectedPayment = SearchMethods.selectPaymentFromList(foundPayments);
 
         if (selectedPayment == null) {
             System.out.println("Ingen betaling valgt.");
@@ -156,26 +70,13 @@ public class AnnualMemberPayment {
         }
     }
 
-    //To String
-    @Override
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String formattedDate = paymentDueDate.format(formatter);
-        String paidStatus = isPaid ? "Betalt" : "Ikke betalt";
-        String fullName = getMemberFirstName() + " " + getMemberLastName();
-        return "Medlems ID: " + getMemberID() +
-                ", Navn: " + fullName +
-                ", Betalingsdato: " + formattedDate +
-                ", Betalingsstatus: " + paidStatus +
-                ", Beløb: " + String.format("%.2f", amount);
-    }
-
     // Metode til at beregne kontingentbeløbet
-    public void calculateMembershipFee(Member member) {
+    public static double calculateMembershipFee(Member member) {
         int age = Period.between(member.getBirthDate(), LocalDate.now()).getYears();
         boolean isElderlySenior = age >= 60;
-        boolean isActive = member instanceof Swimmer && ((Swimmer) member).getMemberType().equals("Aktiv");
+        boolean isActive = member instanceof Swimmer && ((Swimmer) member).getMembershipStatus().equals("Aktiv");
 
+        double amount;
         if (isActive) {
             if (age < 18) {
                 amount = 1000; // Juniorsvømmer
@@ -185,14 +86,15 @@ public class AnnualMemberPayment {
         } else {
             amount = 500; // Passivt medlemskab
         }
+        return amount;
     }
 
     //Metode til at vise fremtidige betalinger
-    public static void displayUpcomingPayments(ArrayList<AnnualMemberPayment> payments) {
+    public static void displayUpcomingPayments(ArrayList<AnnualPayment> payments) {
         boolean foundUnpaid = false;
         System.out.println("Betalinger: ");
 
-        for (AnnualMemberPayment payment : payments) {
+        for (AnnualPayment payment : payments) {
             if (!payment.getIsPaid() && payment.getPaymentDueDate().isAfter(LocalDate.now())) {
                 String output = String.format("Member ID: %d, Navn: %s %s, Betalingsdato: %s, Betalingsstatus: %s, Beløb: %.2f",
                         payment.getMemberID(),
@@ -215,7 +117,7 @@ public class AnnualMemberPayment {
     public static void displayPaymentsOverdue() {
         boolean foundOverdue = false;
 
-        for (AnnualMemberPayment payment : paymentList) {
+        for (AnnualPayment payment : paymentList) {
             // Tjek om betalingen er forfalden og ikke betalt
             if (!payment.getIsPaid() && payment.getPaymentDueDate().isBefore(LocalDate.now())) {
                 String output = String.format("Member ID: %d, Navn: %s %s, Forfalden Betalingsdato: %s, Beløb: %.2f",

@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+//Klasse med metoder der vedrører konkurrence events
 public class CompetitionEventManagement {
     private static final Scanner scanner = new Scanner(System.in);
     private static final List<CompetitionEvent> competitionResults = new ArrayList<>();
@@ -16,8 +17,8 @@ public class CompetitionEventManagement {
         while (addingResults) {
             System.out.print("Søg efter konkurrencesvømmer (Fornavn, Efternavn eller Medlems ID): ");
             String searchCriteria = scanner.nextLine();
-            List<Member> foundMembers = MemberManagement.searchOnlyCompetitionSwimmers(searchCriteria);
-            Member selectedSwimmer = MemberManagement.selectMemberFromList(foundMembers);
+            List<Member> foundMembers = SearchMethods.searchOnlyCompetitionSwimmers(searchCriteria);
+            Member selectedSwimmer = SearchMethods.selectMemberFromList(foundMembers);
 
             if (selectedSwimmer != null) {
                 addSwimmerResults(meetName, meetDate, selectedSwimmer);

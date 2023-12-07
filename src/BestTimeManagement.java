@@ -76,8 +76,8 @@ public class BestTimeManagement {
     public static void handleTrainingTime() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = MemberManagement.searchOnlyCompetitionSwimmers(searchCriteria);
-        Member selectedMember = MemberManagement.selectMemberFromList(foundMembers);
+        List<Member> foundMembers = SearchMethods.searchOnlyCompetitionSwimmers(searchCriteria);
+        Member selectedMember = SearchMethods.selectMemberFromList(foundMembers);
         System.out.println();
 
         if (selectedMember != null) {
@@ -101,7 +101,7 @@ public class BestTimeManagement {
                 System.out.print("Indtast tid (MM:ss:hh): ");
                 String time = scanner.nextLine();
 
-                addTrainingTime((Swimmer) selectedMember, discipline, date, time);
+                addTrainingTime(selectedMember, discipline, date, time);
             } else {
                 System.out.println("Ugyldigt disciplinnummer.");
             }
@@ -113,8 +113,8 @@ public class BestTimeManagement {
     public static void displayBestTimes() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = MemberManagement.searchOnlyCompetitionSwimmers(searchCriteria);
-        Member selectedSwimmer = MemberManagement.selectMemberFromList(foundMembers);
+        List<Member> foundMembers = SearchMethods.searchOnlyCompetitionSwimmers(searchCriteria);
+        Member selectedSwimmer = SearchMethods.selectMemberFromList(foundMembers);
         System.out.println();
 
         if (selectedSwimmer != null) {
@@ -139,7 +139,6 @@ public class BestTimeManagement {
 
     // Metode der tjekker om den nye oplyste tid er en ny personly rekord eller ej
     public static boolean isNewPersonalBest(String firstName, String lastName, int memberID, String discipline, String newTime, BestTime.TimeType newTimeType) {
-        boolean isCompetitionTime = newTimeType == BestTime.TimeType.COMPETITION;
 
         // Find existing records for the same swimmer, discipline, and time type
         List<BestTime> existingRecords = swimmerTimes.stream()
@@ -196,15 +195,10 @@ public class BestTimeManagement {
                 return 1;
             } else if (seconds1 < seconds2) {
                 return -1;
-            } else if (seconds1 > seconds2) {
+            } else // Tiderne er ens
+                if (seconds1 > seconds2) {
                 return 1;
-            } else if (hundredths1 < hundredths2) {
-                return -1;
-            } else if (hundredths1 > hundredths2) {
-                return 1;
-            } else {
-                return 0; // Tiderne er ens
-            }
+            } else return Integer.compare(hundredths1, hundredths2);
         }
     }
 
@@ -251,18 +245,15 @@ public class BestTimeManagement {
             System.out.println("Top 5 tider for disciplin \"" + discipline + "\":");
             int count = 0;
             for (BestTime timeRecord : times) {
-                // Tjek om svømmeren allerede er blevet vist
                 if (!shownSwimmers.contains(timeRecord.getMemberID())) {
-                    String bestTime = timeRecord.getTime();
-                    String swimmerName = timeRecord.getFirstName() + " " + timeRecord.getLastName();
-                    System.out.println(swimmerName + " (Medlems ID: " + timeRecord.getMemberID() + ") - Bedste tid: " + bestTime);
+                    String formattedRecord = String.format("%-20s (Medlems ID: %d)  \t  Bedste tid: %-8s",
+                            timeRecord.getFirstName() + " " + timeRecord.getLastName(),
+                            timeRecord.getMemberID(),
+                            timeRecord.getTime());
+                    System.out.println(formattedRecord);
 
                     count++;
-                    if (count >= 5) {
-                        break;
-                    }
-
-                    // Marker svømmeren som vist
+                    if (count >= 5) break;
                     shownSwimmers.add(timeRecord.getMemberID());
                 }
             }

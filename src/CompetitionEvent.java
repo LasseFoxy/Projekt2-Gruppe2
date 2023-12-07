@@ -1,13 +1,14 @@
 import java.time.LocalDate;
 
+//Klasse der omhandler konkurrence events
 public class CompetitionEvent {
-    private String meetName;
-    private LocalDate meetDate;
-    private String swimmerName;
-    private int swimmerID;
-    private String discipline;
-    private String time;
-    private int placement;
+    private final String meetName;
+    private final LocalDate meetDate;
+    private final String swimmerName;
+    private final int swimmerID;
+    private final String discipline;
+    private final String time;
+    private final int placement;
 
     // Konstruktør
     public CompetitionEvent(String meetName, LocalDate meetDate, String swimmerName, int swimmerID,
@@ -48,34 +49,5 @@ public class CompetitionEvent {
 
     public int getPlacement() {
         return placement;
-    }
-
-    // Setters
-    public void setMeetName(String meetName) {
-        this.meetName = meetName;
-    }
-
-    public void setMeetDate(LocalDate meetDate) {
-        this.meetDate = meetDate;
-    }
-
-    public void setSwimmerName(String swimmerName) {
-        this.swimmerName = swimmerName;
-    }
-
-    public void setSwimmerID(int swimmerID) {
-        this.swimmerID = swimmerID;
-    }
-
-    public void setDiscipline(String discipline) {
-        this.discipline = discipline;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public void setPlacement(int placement) {
-        this.placement = placement;
     }
 }

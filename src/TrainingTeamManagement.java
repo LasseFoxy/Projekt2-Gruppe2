@@ -2,27 +2,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TeamManagement {
-    private static final ArrayList<Team> holdListe = new ArrayList<>();
+public class TrainingTeamManagement {
+    private static final ArrayList<TrainingTeam> holdListe = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void CreateTeams() {
-        holdListe.add(new Team("Junior", 1));
-        holdListe.add(new Team("Junior", 2));
-        holdListe.add(new Team("Junior", 3));
-        holdListe.add(new Team("Senior", 1));
-        holdListe.add(new Team("Senior", 2));
-        holdListe.add(new Team("Senior", 3));
-        holdListe.add(new Team("Motion", 1));
+        holdListe.add(new TrainingTeam("Junior", "Crawl"));
+        holdListe.add(new TrainingTeam("Junior", "Rygsvømning"));
+        holdListe.add(new TrainingTeam("Junior", "Brystsvømning"));
+        holdListe.add(new TrainingTeam("Junior", "Butterfly"));
+        holdListe.add(new TrainingTeam("Senior", "Crawl"));
+        holdListe.add(new TrainingTeam("Senior", "Rygsvømning"));
+        holdListe.add(new TrainingTeam("Senior", "Brystsvømning"));
+        holdListe.add(new TrainingTeam("Senior", "Butterfly"));
+        holdListe.add(new TrainingTeam("Motion", "Fælleshold"));
     }
 
 
     public static void handleMemberTeamAssignment() {
         System.out.print("Søg efter Konkurrencesvømmer eller Træner (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = MemberManagement.searchCompetitionSwimmersAndTrainers(searchCriteria);
+        List<Member> foundMembers = SearchMethods.searchCompetitionSwimmersAndTrainers(searchCriteria);
 
-        Member selectedMember = MemberManagement.selectMemberFromList(foundMembers);
+        Member selectedMember = SearchMethods.selectMemberFromList(foundMembers);
         if (selectedMember == null) {
             System.out.println("Ingen konkurrencesvømmere eller trænere fundet.");
             return;
@@ -65,9 +67,9 @@ public class TeamManagement {
         scanner.nextLine();
 
         if (choice >= 1 && choice <= holdListe.size()) {
-            Team selectedTeam = holdListe.get(choice - 1);
+            TrainingTeam selectedTeam = holdListe.get(choice - 1);
             selectedTeam.addMedlem(member);
-            System.out.println("\n"+member.getShortInfo() + " tilføjet til holdet: " + selectedTeam.getHoldNavn() + " " + selectedTeam.getHoldNummer());
+            System.out.println("\n"+member.getShortInfo() + " tilføjet til holdet: " + selectedTeam.getHoldNavn() + " " + selectedTeam.getHoldDisciplin());
         } else {
             System.out.println("Ugyldigt valg.");
         }
@@ -75,11 +77,11 @@ public class TeamManagement {
 
     private static void removeMemberFromTeam(Member member) {
         System.out.println("\nVælg et hold som medlemmet skal fjernes fra: ");
-        List<Team> medlemsHold = new ArrayList<>();
-        for (Team team : holdListe) {
+        List<TrainingTeam> medlemsHold = new ArrayList<>();
+        for (TrainingTeam team : holdListe) {
             if (team.getMedlemmer().contains(member)) {
                 medlemsHold.add(team);
-                System.out.println((medlemsHold.size()) + ". " + team.getHoldNavn() + " " + team.getHoldNummer());
+                System.out.println((medlemsHold.size()) + ". " + team.getHoldNavn() + " " + team.getHoldDisciplin());
             }
         }
 
@@ -93,7 +95,7 @@ public class TeamManagement {
         scanner.nextLine(); // Ryd bufferen efter int-input
 
         if (choice > 0 && choice <= medlemsHold.size()) {
-            Team selectedTeam = medlemsHold.get(choice - 1);
+            TrainingTeam selectedTeam = medlemsHold.get(choice - 1);
             selectedTeam.removeMedlem(member);
             System.out.println(member.getShortInfo() + " fjernet fra holdet: " + selectedTeam.getHoldNavn());
         } else {
@@ -128,7 +130,7 @@ public class TeamManagement {
     }
 
     private static void showTeams(String teamType) {
-        for (Team team : holdListe) {
+        for (TrainingTeam team : holdListe) {
             if (team.getHoldNavn().equalsIgnoreCase(teamType)) {
                 System.out.println(team);
             }

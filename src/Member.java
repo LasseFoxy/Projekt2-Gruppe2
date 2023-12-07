@@ -10,7 +10,7 @@ public class Member {
     private LocalDate birthDate;
     private String phoneNumber;
     private String email;
-    private int memberID;
+    private final int memberID;
 
     // Konstruktør for Member
     public Member(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID) {
@@ -39,8 +39,6 @@ public class Member {
     public void setEmail(String email) { this.email = email; }
 
     public int getMemberID() { return memberID; }
-    public void setMemberID(int memberID) { this.memberID = memberID; }
-
 
     //Metoder der tjekker om det er en junior eller senior
     public String getAgeCategory() {
@@ -74,14 +72,17 @@ public class Member {
                 "\nEmail: " + email;
     }
 
-    //Metode der kun viser Fornavn, Efter, Medlems ID
+    //Metode der kun viser Fornavn, Efter, Medlems ID og rolle (Svømmer/Træner)
     public String getShortInfo() {
-        return this.firstName + " " + this.lastName + " (Medlems ID: " + this.memberID + ")";
+        String role = "Medlem";
+        if (this instanceof Trainer) {
+            role = "(Træner)";
+        } else if (this instanceof Swimmer) {
+            role = "(Svømmer)";
+        }
+        return this.firstName + " " + this.lastName + " (Medlems ID: " + this.memberID + ") - " + role;
     }
 }
-
-
-
 
 //Trænerklasse som nedarver fra Member
 class Trainer extends Member {
@@ -93,8 +94,7 @@ class Trainer extends Member {
         this.position = position;
     }
 
-    // Getters og setters tilføjelse for trænere
-    public String getPosition() { return position; }
+    // Getters og setters specifikke for trænere
     public void setPosition(String position) { this.position = position; }
 
     //To String tilføjelse for trænere
@@ -107,19 +107,19 @@ class Trainer extends Member {
 
 //Svømmerklasse som nedarver fra Member
 class Swimmer extends Member {
-    private String memberType; // Aktiv eller Passiv
+    private String membershipStatus; // Aktiv eller Passiv
     private String activityType; // Konkurrencesvømmer eller Fritidssvømmer
 
     //Konstruktør svømmer
     public Swimmer(String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, int memberID, String memberType, String activityType) {
         super(firstName, lastName, birthDate, phoneNumber, email, memberID);
-        this.memberType = memberType;
+        this.membershipStatus = memberType;
         this.activityType = activityType;
     }
 
     // Getters og Setters for tilføjelse for svømmere
-    public String getMemberType() { return memberType; }
-    public void setMemberType(String memberType) { this.memberType = memberType; }
+    public String getMembershipStatus() { return membershipStatus; }
+    public void setMembershipStatus(String membershipStatus) { this.membershipStatus = membershipStatus; }
 
     public String getActivityType() { return activityType; }
     public void setActivityType(String activityType) { this.activityType = activityType; }
@@ -128,7 +128,7 @@ class Swimmer extends Member {
     @Override
     public String toString() {
         return super.toString() +
-                "\nMedlemstype: " + memberType +
+                "\nMedlemstype: " + membershipStatus +
                 "\nAktivitetstype: " + activityType + "\n";
     }
 }

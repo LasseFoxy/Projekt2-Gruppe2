@@ -14,7 +14,7 @@ public class TestMembers {
         MemberManagement.membersList.add(new Swimmer("Ida", "Christensen", LocalDate.of(2007, 8, 19), "67890123", "ida@example.com", 6, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Anders", "Larsen", LocalDate.of(2001, 2, 10), "78901234", "anders@example.com", 7, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Mette", "Nielsen", LocalDate.of(2000, 1, 5), "89012345", "mette@example.com", 8, "Passiv", "Konkurrencesvømmer"));
-        MemberManagement.membersList.add(new Swimmer("Peter", "Jensen", LocalDate.of(1999, 12, 30), "90123456", "peter@example.com", 9, "Aktiv", "Konkurrencesvømmer"));
+        MemberManagement.membersList.add(new Swimmer("Peter", "Jensen", LocalDate.of(1940, 12, 30), "90123456", "peter@example.com", 9, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Anne", "Hansen", LocalDate.of(1998, 11, 25), "01234567", "anne@example.com", 10, "Passiv", "Fritidssvømmer"));
 
         // Tilføj 10 trænere
@@ -32,16 +32,16 @@ public class TestMembers {
         for (Member member : MemberManagement.membersList) {
             if (member instanceof Swimmer) {
                 LocalDate paymentDueDate = LocalDate.now().plusYears(1);
-                AnnualMemberPayment payment = new AnnualMemberPayment(member, paymentDueDate);
-                AnnualMemberPayment.paymentList.add(payment);
+                AnnualPayment payment = new AnnualPayment(member, paymentDueDate);
+                AnnualPaymentManagement.paymentList.add(payment);
             }
         }
 
-        AnnualMemberPayment.paymentList.get(0).setPaymentDueDate(LocalDate.now().minusMonths(1));
-        AnnualMemberPayment.paymentList.get(1).setPaymentDueDate(LocalDate.now().minusDays(10));
-        AnnualMemberPayment.paymentList.get(2).setPaymentDueDate(LocalDate.now().minusDays(20));
-        AnnualMemberPayment.paymentList.get(3).setPaymentDueDate(LocalDate.now().plusDays(20));
-        AnnualMemberPayment.paymentList.get(4).setPaymentDueDate(LocalDate.now().plusDays(4));
+        AnnualPaymentManagement.paymentList.get(0).setPaymentDueDate(LocalDate.now().minusMonths(1));
+        AnnualPaymentManagement.paymentList.get(1).setPaymentDueDate(LocalDate.now().minusDays(10));
+        AnnualPaymentManagement.paymentList.get(2).setPaymentDueDate(LocalDate.now().minusDays(20));
+        AnnualPaymentManagement.paymentList.get(3).setPaymentDueDate(LocalDate.now().plusDays(20));
+        AnnualPaymentManagement.paymentList.get(4).setPaymentDueDate(LocalDate.now().plusDays(4));
     }
 
     public static void generateTimesForCompetitiveSwimmers() {
@@ -50,8 +50,7 @@ public class TestMembers {
         BestTime.TimeType[] timeTypes = {BestTime.TimeType.TRAINING, BestTime.TimeType.COMPETITION};
 
         for (Member member : MemberManagement.membersList) {
-            if (member instanceof Swimmer && ((Swimmer) member).getActivityType().equals("Konkurrencesvømmer")) {
-                Swimmer swimmer = (Swimmer) member;
+            if (member instanceof Swimmer swimmer && ((Swimmer) member).getActivityType().equals("Konkurrencesvømmer")) {
 
                 for (String discipline : disciplines) {
                     for (BestTime.TimeType timeType : timeTypes) {

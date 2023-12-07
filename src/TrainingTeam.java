@@ -1,15 +1,15 @@
 import java.util.ArrayList;
 
 
-public class Team {
+public class TrainingTeam {
     private final String holdNavn;
-    private final int holdNummer;
+    private final String holdDisciplin;
     private final ArrayList<Member> medlemmer; // Liste af medlemmer, herunder trænere og svømmere
 
     // Konstruktør
-    public Team(String navn, int nummer) {
-        this.holdNavn = navn;
-        this.holdNummer = nummer;
+    public TrainingTeam(String holdNavn, String holdDisciplin) {
+        this.holdNavn = holdNavn;
+        this.holdDisciplin = holdDisciplin;
         this.medlemmer = new ArrayList<>();
     }
 
@@ -18,8 +18,8 @@ public class Team {
         return holdNavn;
     }
 
-    public int getHoldNummer() {
-        return holdNummer;
+    public String getHoldDisciplin() {
+        return holdDisciplin;
     }
 
     public ArrayList<Member> getMedlemmer() {
@@ -37,13 +37,13 @@ public class Team {
 
     @Override
     public String toString() {
-        String result = holdNavn + " Hold " + holdNummer + ":";
+        String result = String.format("%-15s %-15s", holdNavn + " Hold", holdDisciplin + ":");
+
         if (medlemmer.isEmpty()) {
-            result += "Ingen medlemmer på holdet.";
+            result += String.format("\t%-35s", "Ingen medlemmer på holdet.");
         } else {
-            result += " ";
             for (Member medlem : medlemmer) {
-                result += medlem.getShortInfo()+" , ";
+                result += String.format("\t%-35s", medlem.getShortInfo());
             }
         }
         return result;

@@ -15,7 +15,7 @@ public class Menu {
 
         public void displayMemberMenu() {
                 System.out.println();
-                System.out.println("Medlemmer:");
+                System.out.println("Medlemskaber:");
                 System.out.println("1. Opret svømmer");
                 System.out.println("2. Opret træner");
                 System.out.println("3. Håndter medlem (Vis/slet/rediger)");
@@ -27,7 +27,7 @@ public class Menu {
                 System.out.println("Økonomi:");
                 System.out.println("1. Kommende betalinger");
                 System.out.println("2. Betalinger i restance");
-                System.out.println("3. Marker kontingentbetaling som betalt");
+                System.out.println("3. Vis kontingentbetalinger/Marker som betalt");
                 System.out.println("0. Tilbage til hovedmenu");
 
         } public void displaySwimmerDataMenu() {
@@ -122,14 +122,14 @@ public class Menu {
 
                         switch (choice) {
                                 case "1":
-                                        AnnualMemberPayment.displayUpcomingPayments(AnnualMemberPayment.paymentList);
+                                        AnnualPaymentManagement.displayUpcomingPayments(AnnualPaymentManagement.paymentList);
                                         break;
                                 case "2":
-                                        AnnualMemberPayment.displayPaymentsOverdue();
+                                        AnnualPaymentManagement.displayPaymentsOverdue();
                                         break;
 
                                 case "3":
-                                        AnnualMemberPayment.handlePayment();
+                                        AnnualPaymentManagement.handlePayment();
                                         break;
 
                                 case "0":
@@ -180,7 +180,7 @@ public class Menu {
 
         private void runTeamManagementMenu() {
                 boolean teamManagementMenuRunning = true;
-                TeamManagement.CreateTeams();
+                TrainingTeamManagement.CreateTeams();
 
                 while (teamManagementMenuRunning) {
                         displayTeamManagementMenu();
@@ -190,10 +190,10 @@ public class Menu {
 
                         switch (choice) {
                                 case "1":
-                                        TeamManagement.handleMemberTeamAssignment();
+                                        TrainingTeamManagement.handleMemberTeamAssignment();
                                         break;
                                 case "2":
-                                        TeamManagement.showTeamsByType();
+                                        TrainingTeamManagement.showTeamsByType();
                                         break;
                                 case "0":
                                         teamManagementMenuRunning = false;

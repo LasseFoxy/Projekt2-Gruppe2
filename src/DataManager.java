@@ -1,83 +1,58 @@
 import java.io.*;
-import java.util.ArrayList;
 
 public class DataManager {
-    private static final String MEMBERS_FILE = "members.dat";
-    private static final String PAYMENTS_FILE = "payments.dat";
-    private static final String TIMES_FILE = "times.dat";
-    private static final String COMPETITION_RESULTS_FILE = "competitionResults.dat";
-    private static final String TEAMS_FILE = "teams.dat";
+    private static final String DATA_FOLDER = "data"; // Mappe til at gemme datafiler
 
     public static void saveAllData() {
-        saveData(MEMBERS_FILE, MemberManagement.membersList);
-        saveData(PAYMENTS_FILE, AnnualPaymentManagement.paymentList);
-        saveData(TIMES_FILE, BestTimeManagement.swimmerTimes);
-        saveData(COMPETITION_RESULTS_FILE, CompetitionEventManagement.competitionResults);
-        saveData(TEAMS_FILE, TrainingTeamManagement.holdListe);
+        createDataFolderIfNeeded(); // Opret data-mappen, hvis den ikke eksisterer
+
+        saveData("members.dat", MemberManagement.membersList);
+        saveData("payments.dat", AnnualPaymentManagement.paymentList);
+        saveData("times.dat", BestTimeManagement.swimmerTimes);
+        saveData("competitionResults.dat", CompetitionEventManagement.competitionResults);
+        saveData("teams.dat", TrainingTeamManagement.holdListe);
+        System.exit(0);
     }
 
-
     public static void loadAllData() {
-        boolean membersFileExists = fileExists(MEMBERS_FILE);
-        boolean paymentsFileExists = fileExists(PAYMENTS_FILE);
-        boolean timesFileExists = fileExists(TIMES_FILE);
-        boolean competitionResultsFileExists = fileExists(COMPETITION_RESULTS_FILE);
-        boolean teamsFileExists = fileExists(TEAMS_FILE);
+        createDataFolderIfNeeded(); // Opret data-mappen, hvis den ikke eksisterer
 
-        if (membersFileExists) {
-            MemberManagement.membersList = loadData(MEMBERS_FILE);
-        }
-        if (paymentsFileExists) {
-            AnnualPaymentManagement.paymentList = loadData(PAYMENTS_FILE);
-        }
-        if (timesFileExists) {
-            BestTimeManagement.swimmerTimes = loadData(TIMES_FILE);
-        }
-        if (competitionResultsFileExists) {
-            CompetitionEventManagement.competitionResults = loadData(COMPETITION_RESULTS_FILE);
-        }
-        if (teamsFileExists) {
-            TrainingTeamManagement.holdListe = loadData(TEAMS_FILE);
+        if (fileExists("members.dat")) {
+            MemberManagement.membersList = loadData("members.dat");
         }
 
-        // Opret de tomme filer, hvis de ikke eksisterer
-        if (!membersFileExists) {
-            createEmptyFile(MEMBERS_FILE);
+        if (fileExists("payments.dat")) {
+            AnnualPaymentManagement.paymentList = loadData("payments.dat");
         }
-        if (!paymentsFileExists) {
-            createEmptyFile(PAYMENTS_FILE);
+
+        if (fileExists("times.dat")) {
+            BestTimeManagement.swimmerTimes = loadData("times.dat");
         }
-        if (!timesFileExists) {
-            createEmptyFile(TIMES_FILE);
+
+        if (fileExists("competitionResults.dat")) {
+            CompetitionEventManagement.competitionResults = loadData("competitionResults.dat");
         }
-        if (!competitionResultsFileExists) {
-            createEmptyFile(COMPETITION_RESULTS_FILE);
-        }
-        if (!teamsFileExists) {
-            createEmptyFile(TEAMS_FILE);
+
+        if (fileExists("teams.dat")) {
+            TrainingTeamManagement.holdListe = loadData("teams.dat");
         }
     }
 
     private static boolean fileExists(String fileName) {
-        File file = new File(fileName);
+        File file = new File(DATA_FOLDER + File.separator + fileName);
         return file.exists();
     }
 
-    private static void createEmptyFile(String fileName) {
-        try {
-            FileOutputStream fos = new FileOutputStream(fileName);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(null);  // Skriv en tom liste til filen
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    private static void createDataFolderIfNeeded() {
+        File dataFolder = new File(DATA_FOLDER);
+        if (!dataFolder.exists()) {
+            dataFolder.mkdir(); // Opret mappen, hvis den ikke eksisterer
         }
     }
 
-
     private static void saveData(String fileName, Object data) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FOLDER + File.separator + fileName))) {
             out.writeObject(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,7 +62,7 @@ public class DataManager {
     @SuppressWarnings("unchecked")
     private static <T> T loadData(String fileName) {
         try {
-            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DATA_FOLDER + File.separator + fileName))) {
                 return (T) in.readObject();
             }
         } catch (IOException | ClassNotFoundException e) {

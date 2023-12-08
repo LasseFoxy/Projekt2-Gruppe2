@@ -11,8 +11,8 @@ public class Menu {
                 System.out.println("2. Økonomi");
                 System.out.println("3. Svømmer data");
                 System.out.println("4. Holdadministration");
-                System.out.println("5. Gem ændringer");
-                System.out.println("0. Afslut programmet");
+                System.out.println("5. Gem og afslut programmet");
+                System.out.println("0. Annuller ændringer og afslut programmet");
         }
 
         public void displayMemberMenu() {
@@ -52,9 +52,14 @@ public class Menu {
         }
 
         public void runMenu() {
-                TestMembers.initializeTestMembers(); //Opretter Testmedlemmer
-                TestMembers.generateTimesForCompetitiveSwimmers(); //Generer "Bedste tider" for konkurrencesvømmere
-                DataManager.loadAllData();
+                // Kun initialiser testmedlemmer og bedste tider, hvis de ikke allerede eksisterer
+                if (MemberManagement.membersList == null || MemberManagement.membersList.isEmpty()) {
+                        TestMembers.initializeTestMembers(); // Opretter Testmedlemmer
+                }
+
+                if (BestTimeManagement.swimmerTimes == null || BestTimeManagement.swimmerTimes.isEmpty()) {
+                        TestMembers.generateTimesForCompetitiveSwimmers(); // Generer "Bedste tider" for konkurrencesvømmere
+                }
 
                 boolean running = true;
 

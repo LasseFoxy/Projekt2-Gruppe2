@@ -3,6 +3,7 @@ import java.time.Period;
 import java.util.*;
 import java.util.Scanner;
 
+//Klasse til at håndtere årlig kontingentbetaling
 public class AnnualPaymentManagement {
     private static final Scanner scanner = new Scanner(System.in);
     public static ArrayList<AnnualPayment> paymentList = new ArrayList<>();
@@ -27,7 +28,6 @@ public class AnnualPaymentManagement {
         payment.setIsPaid(true); // Antag at Payment klassen har en metode setPaid
         System.out.println("Betaling for medlemmet " + payment.getMemberFirstName() + " " + payment.getMemberLastName() + " er markeret som betalt.");
     }
-
 
     // Metode til at håndtere betalingsprocessen
     public static void handlePayment() {

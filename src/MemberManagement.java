@@ -5,7 +5,6 @@ public class MemberManagement {
     private static final Scanner scanner = new Scanner(System.in);
     public static ArrayList<Member> membersList = new ArrayList<>();
 
-
     //Metode til at indsamle Stamdata (Fornavn, Efternavn, Fødselsdato, Telefonnummer, E-mail)
     public static Member gatherBasicMemberInfo() {
             System.out.print("Indtast fornavn: ");

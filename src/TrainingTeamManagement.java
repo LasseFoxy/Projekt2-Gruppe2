@@ -22,9 +22,9 @@ public class TrainingTeamManagement {
     public static void handleMemberTeamAssignment() {
         System.out.print("Søg efter Konkurrencesvømmer eller Træner (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = SearchMethods.searchCompetitionSwimmersAndTrainers(searchCriteria);
+        List<Member> foundMembers = SearchAndInputMethods.searchCompetitionSwimmersAndTrainers(searchCriteria);
 
-        Member selectedMember = SearchMethods.selectMemberFromList(foundMembers);
+        Member selectedMember = SearchAndInputMethods.selectMemberFromList(foundMembers);
         if (selectedMember == null) {
             System.out.println("Ingen konkurrencesvømmere eller trænere fundet.");
             return;
@@ -39,9 +39,7 @@ public class TrainingTeamManagement {
 
         System.out.println("1. Tilføj til hold");
         System.out.println("2. Fjern fra hold");
-        System.out.print("Indtast valg: ");
-        int action = scanner.nextInt();
-        scanner.nextLine();
+        int action = SearchAndInputMethods.promptForChoice(scanner, "Indtast valg: ", 1, 2);
 
         switch (action) {
             case 1:
@@ -62,9 +60,11 @@ public class TrainingTeamManagement {
         for (int i = 0; i < holdListe.size(); i++) {
             System.out.println((i + 1) + ". " + holdListe.get(i));
         }
-        System.out.print("Indtast valg: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int[] validChoices = new int[holdListe.size()];
+        for (int i = 0; i < holdListe.size(); i++) {
+            validChoices[i] = i + 1;
+        }
+        int choice = SearchAndInputMethods.promptForChoice(scanner, "Indtast valg: ", validChoices);
 
         if (choice >= 1 && choice <= holdListe.size()) {
             TrainingTeam selectedTeam = holdListe.get(choice - 1);
@@ -108,9 +108,7 @@ public class TrainingTeamManagement {
         System.out.println("1. Vis juniorhold");
         System.out.println("2. Vis seniorhold");
         System.out.println("3. Vis motionshold");
-        System.out.print("Indtast valg: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = SearchAndInputMethods.promptForChoice(scanner, "Indtast valg: ", 1, 2, 3);
         System.out.println();
 
         switch (choice) {

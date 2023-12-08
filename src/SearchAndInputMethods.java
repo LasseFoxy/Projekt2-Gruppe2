@@ -3,7 +3,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-public class SearchMethods {
+public class SearchAndInputMethods {
     private static final Scanner scanner = new Scanner(System.in);
 
     //Hovedmetode for at søge efter medlemmer med søgekriterier (Se booleans)
@@ -60,17 +60,16 @@ public class SearchMethods {
             System.out.println((i + 1) + ". " + members.get(i).getShortInfo());
         }
 
-        System.out.print("Vælg et nummer eller tryk 0 for at gå tilbage: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        // Genererer et array af gyldige valgmuligheder baseret på medlemslistens størrelse plus en for "gå tilbage" muligheden
+        int[] validChoices = new int[members.size() + 1];
+        for (int i = 0; i <= members.size(); i++) {
+            validChoices[i] = i;
+        }
+
+        int choice = promptForChoice(scanner, "Vælg et nummer eller tryk 0 for at gå tilbage: ", validChoices);
 
         if (choice == 0) {
             System.out.println("Handling afbrudt.");
-            return null;
-        }
-
-        if (choice < 1 || choice > members.size()) {
-            System.out.println("Ugyldigt valg.");
             return null;
         }
 
@@ -102,9 +101,12 @@ public class SearchMethods {
             System.out.println((i + 1) + ". " + payments.get(i));
         }
 
-        System.out.print("Vælg en betaling: \n");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int[] validPaymentChoices = new int[payments.size()];
+        for (int i = 0; i < payments.size(); i++) {
+            validPaymentChoices[i] = i + 1;
+        }
+        int choice = promptForChoice(scanner, "Vælg en betaling: \n", validPaymentChoices);
+
 
         if (choice < 1 || choice > payments.size()) {
             System.out.println("Ugyldigt valg.");
@@ -114,20 +116,20 @@ public class SearchMethods {
         return payments.get(choice - 1);
     }
 
-
     public static int promptForChoice(Scanner scanner, String prompt, int... validChoices) {
         int choice;
         boolean isValidChoice;
         do {
             System.out.print(prompt);
             while (!scanner.hasNextInt()) {
-                System.out.println("Det skal være et tal. Prøv igen.");
+                System.out.println("Det skal være et gyldigt tal. Prøv igen.");
                 System.out.print(prompt);
                 scanner.next();
             }
             choice = scanner.nextInt();
-            isValidChoice = false;
+            scanner.nextLine();
 
+            isValidChoice = false;
             for (int validChoice : validChoices) {
                 if (choice == validChoice) {
                     isValidChoice = true;
@@ -150,9 +152,38 @@ public class SearchMethods {
             try {
                 date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             } catch (DateTimeParseException e) {
-                System.out.println("Ugyldig indtasting, prøv igen.");
+                System.out.println("Ugyldig indtastning, prøv igen.");
             }
         }
         return date;
+    }
+
+    public static String promptForTime(Scanner scanner, String prompt) {
+        String time;
+        do {
+            System.out.print(prompt);
+            time = scanner.nextLine();
+
+            // Validerer om tiden matcher formatet MM:ss:hh
+            if (!time.matches("^([0-5][0-9]):([0-5][0-9]):([0-9][0-9])$")) {
+                System.out.println("Ugyldigt tidsformat. Prøv igen (MM:ss:hh): ");
+                time = null; // Nulstiller time for at fortsætte løkken
+            }
+        } while (time == null);
+
+        return time;
+    }
+
+    public static String promptForPhoneNumber(Scanner scanner) {
+        String phoneNumber = null;
+        while (phoneNumber == null) {
+            System.out.print("Indtast telefonnummer: ");
+            phoneNumber = scanner.nextLine();
+            if (!phoneNumber.matches("\\d{8}")) {
+                System.out.println("Forkert telefonnummer. Indtast 8 cifret telefonnummer.");
+                phoneNumber = null;
+            }
+        }
+        return phoneNumber;
     }
 }

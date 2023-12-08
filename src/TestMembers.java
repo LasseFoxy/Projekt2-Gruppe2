@@ -1,11 +1,11 @@
 import java.time.LocalDate;
 import java.util.Random;
 
-
+// Denne klasse har til formål at teste de forskellige funktioner i programmet
 public class TestMembers {
 
     public static void initializeTestMembers() {
-        // Tilføj 10 svømmere
+        // Her er tilføjet 10 svømmere som kan testes
         MemberManagement.membersList.add(new Swimmer("Lars", "Jensen", LocalDate.of(2005, 6, 15), "12345678", "lars@example.com", 1, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Sofia", "Larsen", LocalDate.of(2003, 4, 20), "23456789", "sofia@example.com", 2, "Aktiv", "Fritidssvømmer"));
         MemberManagement.membersList.add(new Swimmer("Mads", "Nielsen", LocalDate.of(2004, 5, 22), "34567890", "mads@example.com", 3, "Passiv", "Konkurrencesvømmer"));
@@ -17,7 +17,7 @@ public class TestMembers {
         MemberManagement.membersList.add(new Swimmer("Peter", "Jensen", LocalDate.of(1940, 12, 30), "90123456", "peter@example.com", 9, "Aktiv", "Konkurrencesvømmer"));
         MemberManagement.membersList.add(new Swimmer("Anne", "Hansen", LocalDate.of(1998, 11, 25), "01234567", "anne@example.com", 10, "Passiv", "Fritidssvømmer"));
 
-        // Tilføj 10 trænere
+        // Her er tilføjet 10 trænere som kan testes
         MemberManagement.membersList.add(new Trainer("Thomas", "Andersen", LocalDate.of(1980, 1, 5), "11223344", "thomas@example.com", 11, "Senior Træner"));
         MemberManagement.membersList.add(new Trainer("Maria", "Christensen", LocalDate.of(1985, 3, 10), "22334455", "maria@example.com", 12, "Junior Træner"));
         MemberManagement.membersList.add(new Trainer("Christian", "Petersen", LocalDate.of(1975, 5, 15), "33445566", "christian@example.com", 13, "Senior Træner"));
@@ -29,6 +29,7 @@ public class TestMembers {
         MemberManagement.membersList.add(new Trainer("Martin", "Sørensen", LocalDate.of(1984, 6, 14), "99001122", "martin@example.com", 19, "Senior Træner"));
         MemberManagement.membersList.add(new Trainer("Julie", "Rasmussen", LocalDate.of(1986, 8, 19), "00112233", "julie@example.com", 20, "Junior Træner"));
 
+        //En for-løkke der genererer en betaling for alle svømmere et år ude i fremtiden (Til Test)
         for (Member member : MemberManagement.membersList) {
             if (member instanceof Swimmer) {
                 LocalDate paymentDueDate = LocalDate.now().plusYears(1);
@@ -37,6 +38,7 @@ public class TestMembers {
             }
         }
 
+        //Ændrer nogle af betalingerne i arraylisten til at være overskredet (restance) eller tæt på nuværende dato.
         AnnualPaymentManagement.paymentList.get(0).setPaymentDueDate(LocalDate.now().minusMonths(1));
         AnnualPaymentManagement.paymentList.get(1).setPaymentDueDate(LocalDate.now().minusDays(10));
         AnnualPaymentManagement.paymentList.get(2).setPaymentDueDate(LocalDate.now().minusDays(20));
@@ -44,6 +46,7 @@ public class TestMembers {
         AnnualPaymentManagement.paymentList.get(4).setPaymentDueDate(LocalDate.now().plusDays(4));
     }
 
+    //Metode der genererer tider for konkurrencesvømmere
     public static void generateTimesForCompetitiveSwimmers() {
         Random random = new Random();
         String[] disciplines = {"Crawl", "Rygsvømning", "Brystsvømning", "Butterfly"};
@@ -54,13 +57,12 @@ public class TestMembers {
 
                 for (String discipline : disciplines) {
                     for (BestTime.TimeType timeType : timeTypes) {
-                        int minutes = random.nextInt(2); // Random minut
+                        int minutes = random.nextInt(2); // Random minut fra 0-1
                         int seconds = random.nextInt(60); // Random sekund fra 0 til 59
                         int hundredths = random.nextInt(100); // Random hundrededele fra 0 til 99
 
                         String time = String.format("%02d:%02d:%02d", minutes, seconds, hundredths);
 
-                        // Check if the generated time is a new personal best for competition
                         boolean isNewPersonalBest = BestTimeManagement.isNewPersonalBest(
                                 swimmer.getFirstName(),
                                 swimmer.getLastName(),
@@ -70,7 +72,6 @@ public class TestMembers {
                                 BestTime.TimeType.COMPETITION
                         );
 
-                        // If it's a competition time and a new personal best, add it to the records
                         if (timeType == BestTime.TimeType.COMPETITION && isNewPersonalBest) {
                             BestTime timeRecord = new BestTime(
                                     timeType,
@@ -83,7 +84,7 @@ public class TestMembers {
                             );
                             BestTimeManagement.swimmerTimes.add(timeRecord);
                         } else if (timeType == BestTime.TimeType.TRAINING) {
-                            // Add all practice times without checking if they are personal bests
+
                             BestTime timeRecord = new BestTime(
                                     timeType,
                                     discipline,

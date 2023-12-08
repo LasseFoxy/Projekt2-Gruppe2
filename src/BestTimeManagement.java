@@ -12,20 +12,6 @@ public class BestTimeManagement {
         swimmerTimes = new ArrayList<>();
     }
 
-    public static boolean isValidDateFormat(String dateString) {
-        try {
-            LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            return true;
-        } catch (DateTimeParseException e) {
-            return false;
-        }
-    }
-
-    public static boolean isValidTimeFormat(String timeString) {
-        // Assuming time format is MM:ss:hh
-        return timeString.matches("^([0-5][0-9]):([0-5][0-9]):([0-9][0-9])$");
-    }
-
     //Metode til at tilføje ny bedste træningstid i en disciplin
     public static void addTrainingTime(Member selectedSwimmer, String discipline, LocalDate date, String time) {
         int memberID = selectedSwimmer.getMemberID();
@@ -42,9 +28,7 @@ public class BestTimeManagement {
         if (isNewPersonalBest) {
             // Vis den nye tidsregistrering for brugeren og spørg om bekræftelse
             System.out.println("Ny træningstid registreret: " + discipline + " - " + date + " - " + time);
-            System.out.println("Bekræft tilføjelse af ny tid (1 for Ja, 2 for Nej): ");
-            int confirm = scanner.nextInt();
-            scanner.nextLine();
+            int confirm = SearchAndInputMethods.promptForChoice(scanner, "Bekræft tilføjelse af ny tid (1 for Ja, 2 for Nej): ", 1, 2);
 
             if (confirm == 1) {
                 // Fjern den gamle tid
@@ -72,48 +56,27 @@ public class BestTimeManagement {
         }
     }
 
-
     public static void handleTrainingTime() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = SearchMethods.searchOnlyCompetitionSwimmers(searchCriteria);
-        Member selectedMember = SearchMethods.selectMemberFromList(foundMembers);
-        System.out.println();
+        List<Member> foundMembers = SearchAndInputMethods.searchOnlyCompetitionSwimmers(searchCriteria);
+        Member selectedMember = SearchAndInputMethods.selectMemberFromList(foundMembers);
 
         if (selectedMember != null) {
             System.out.println("Valgt medlem:");
             System.out.println(selectedMember.getShortInfo());
 
-            // Indtast disciplinen som et tal
             System.out.println("Tast 1 for Crawl");
             System.out.println("Tast 2 for Rygsvømning");
             System.out.println("Tast 3 for Brystsvømning");
             System.out.println("Tast 4 for Butterfly");
-            System.out.print("Vælg nummer for disciplin: ");
-            int disciplineNumber = Integer.parseInt(scanner.nextLine());
+            int disciplineNumber = SearchAndInputMethods.promptForChoice(scanner, "Vælg nummer for disciplin: ", 1, 2, 3, 4);
 
             String discipline = translateDiscipline(disciplineNumber);
 
             if (discipline != null) {
-                System.out.print("Indtast dato (dd.MM.yyyy): ");
-                String dateString = scanner.nextLine();
-
-                // Validate date input
-                while (!isValidDateFormat(dateString)) {
-                    System.out.println("Ugyldigt datoformat. Indtast igen (dd.MM.yyyy): ");
-                    dateString = scanner.nextLine();
-                }
-
-                LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-
-                System.out.print("Indtast tid (MM:ss:hh): ");
-                String time = scanner.nextLine();
-
-                // Validate time input
-                while (!isValidTimeFormat(time)) {
-                    System.out.println("Ugyldigt tidsformat. Indtast igen (MM:ss:hh): ");
-                    time = scanner.nextLine();
-                }
+                LocalDate date = SearchAndInputMethods.promptForDate(scanner, "Indtast dato (dd.MM.yyyy): ");
+                String time = SearchAndInputMethods.promptForTime(scanner, "Indtast tid (MM:ss:hh): ");
 
                 addTrainingTime(selectedMember, discipline, date, time);
             } else {
@@ -127,8 +90,8 @@ public class BestTimeManagement {
     public static void displayBestTimes() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
-        List<Member> foundMembers = SearchMethods.searchOnlyCompetitionSwimmers(searchCriteria);
-        Member selectedSwimmer = SearchMethods.selectMemberFromList(foundMembers);
+        List<Member> foundMembers = SearchAndInputMethods.searchOnlyCompetitionSwimmers(searchCriteria);
+        Member selectedSwimmer = SearchAndInputMethods.selectMemberFromList(foundMembers);
         System.out.println();
 
         if (selectedSwimmer != null) {
@@ -178,7 +141,6 @@ public class BestTimeManagement {
 
         return true; // New time is faster than all existing records
     }
-
 
     // Hjælpefunktion til at sammenligne to tider i formatet MM:ss:hh
     public static int compareTimes(String time1, String time2) {

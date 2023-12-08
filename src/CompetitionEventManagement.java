@@ -10,15 +10,14 @@ public class CompetitionEventManagement {
     public static void handleCompetitionEvent() {
         System.out.print("Indtast stævnenavn: ");
         String meetName = scanner.nextLine();
-        System.out.print("Indtast stævnedato (dd.MM.yyyy): ");
-        LocalDate meetDate = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        LocalDate meetDate = SearchAndInputMethods.promptForDate(scanner, "Indtast stævnedato (dd.MM.yyyy): ");
 
         boolean addingResults = true;
         while (addingResults) {
             System.out.print("Søg efter konkurrencesvømmer (Fornavn, Efternavn eller Medlems ID): ");
             String searchCriteria = scanner.nextLine();
-            List<Member> foundMembers = SearchMethods.searchOnlyCompetitionSwimmers(searchCriteria);
-            Member selectedSwimmer = SearchMethods.selectMemberFromList(foundMembers);
+            List<Member> foundMembers = SearchAndInputMethods.searchOnlyCompetitionSwimmers(searchCriteria);
+            Member selectedSwimmer = SearchAndInputMethods.selectMemberFromList(foundMembers);
 
             if (selectedSwimmer != null) {
                 addSwimmerResults(meetName, meetDate, selectedSwimmer);
@@ -26,9 +25,7 @@ public class CompetitionEventManagement {
 
             System.out.println("\n1. Tilføj resultater for andre svømmere til dette stævne");
             System.out.println("2. Færdig med at tilføje resultater for dette stævne");
-            System.out.print("Indtast valg: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = SearchAndInputMethods.promptForChoice(scanner, "Indtast valg: ", 1, 2);
             addingResults = (choice == 1);
         }
 
@@ -47,15 +44,26 @@ public class CompetitionEventManagement {
             System.out.println("3. Brystsvømning");
             System.out.println("4. Butterfly");
             System.out.print("Indtast valg: ");
-            int disciplineChoice = scanner.nextInt();
-            scanner.nextLine();
+            int disciplineChoice = SearchAndInputMethods.promptForChoice(scanner, "Vælg disciplin: ", 1, 2, 3, 4);
             String discipline = BestTimeManagement.translateDiscipline(disciplineChoice);
 
-            System.out.print("\nIndtast tid (MM:ss:hh): ");
-            String time = scanner.nextLine();
+            System.out.print("Indtast tid (MM:ss:hh): ");
+            String time = SearchAndInputMethods.promptForTime(scanner, "Indtast tid (MM:ss:hh): ");
             System.out.print("Indtast placering: ");
-            int placement = scanner.nextInt();
-            scanner.nextLine();
+            int placement;
+            do {
+                while (!scanner.hasNextInt()) {
+                    System.out.println("Indtast venligst et gyldigt tal.");
+                    System.out.print("Indtast placering: ");
+                    scanner.next();
+                }
+                placement = scanner.nextInt();
+                scanner.nextLine();
+
+                if (placement <= 0) {
+                    System.out.println("Placering skal være et positivt tal. Prøv igen.");
+                }
+            } while (placement <= 0);
 
             String formattedDate = meetDate.format(formatter);
             System.out.println("Registreret: " + meetName + " - " + formattedDate + ": " + swimmer.getFirstName() + " " + swimmer.getLastName() + " - Disciplin: " + discipline + " - Tid: " + time + " - Placering: " + placement);
@@ -76,11 +84,10 @@ public class CompetitionEventManagement {
 
             System.out.println("\nValgmuligheder for svømmeren ved dette stævne:");
             System.out.println("1. Vil du tilføje flere resultater for denne svømmer i andre discipliner?");
-            System.out.println("2. Afslut tilføjelse af resultater for denne svømmer ");
-            System.out.print("Indtast valg: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println("2. Afslut tilføjelse af resultater for denne svømmer");
+            int choice = SearchAndInputMethods.promptForChoice(scanner, "Indtast valg: ", 1, 2);
             addingDisciplines = (choice == 1);
+
         }
     }
     //Metode til at tilføje ny bedste konkurrencetid i en disciplin
@@ -121,11 +128,9 @@ public class CompetitionEventManagement {
         System.out.println("Søg efter stævneresultater baseret på:");
         System.out.println("1. Turneringsnavn");
         System.out.println("2. Svømmer (Fornavn, Efternavn, Medlems ID)");
-        System.out.print("Vælg en søgemetode: ");
-        int searchType = scanner.nextInt();
-        scanner.nextLine(); // Ryd scannerens buffer
+        int searchType = SearchAndInputMethods.promptForChoice(scanner, "Vælg en søgemetode: ", 1, 2);
 
-        System.out.print("Indtast søgekriterium: ");
+        System.out.print("Indtast søgning: ");
         String searchCriteria = scanner.nextLine().toLowerCase();
         System.out.println();
 

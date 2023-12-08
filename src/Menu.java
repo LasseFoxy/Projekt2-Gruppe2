@@ -27,7 +27,7 @@ public class Menu {
                 System.out.println("Økonomi:");
                 System.out.println("1. Kommende betalinger");
                 System.out.println("2. Betalinger i restance");
-                System.out.println("3. Vis kontingentbetalinger/Marker som betalt");
+                System.out.println("3. Søg efter kontingentbetalinger/Marker som betalt");
                 System.out.println("0. Tilbage til hovedmenu");
 
         } public void displaySwimmerDataMenu() {
@@ -50,6 +50,7 @@ public class Menu {
         }
 
         public void runMenu() {
+                DataManager.loadAllData();
                 TestMembers.initializeTestMembers(); //Opretter Testmedlemmer
                 TestMembers.generateTimesForCompetitiveSwimmers(); //Generer "Bedste tider" for konkurrencesvømmere
                 boolean running = true;

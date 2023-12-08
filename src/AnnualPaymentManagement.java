@@ -34,7 +34,7 @@ public class AnnualPaymentManagement {
         System.out.print("Søg efter betaling (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
         System.out.println();
-        List<AnnualPayment> foundPayments = SearchMethods.searchPayments(searchCriteria);
+        List<AnnualPayment> foundPayments = SearchAndInputMethods.searchPayments(searchCriteria);
 
         if (foundPayments.isEmpty()) {
             System.out.println("Ingen betalinger fundet.");
@@ -42,7 +42,7 @@ public class AnnualPaymentManagement {
         }
 
         System.out.println("Betalinger: ");
-        AnnualPayment selectedPayment = SearchMethods.selectPaymentFromList(foundPayments);
+        AnnualPayment selectedPayment = SearchAndInputMethods.selectPaymentFromList(foundPayments);
 
         if (selectedPayment == null) {
             System.out.println("Ingen betaling valgt.");
@@ -54,9 +54,7 @@ public class AnnualPaymentManagement {
         System.out.println("1. Marker som betalt");
         System.out.println("0. Gå tilbage");
 
-        System.out.print("Vælg en handling: ");
-        int action = scanner.nextInt();
-        scanner.nextLine();
+        int action = SearchAndInputMethods.promptForChoice(scanner, "Vælg en handling: ", 0, 1);
 
         switch (action) {
             case 1:

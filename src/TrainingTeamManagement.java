@@ -2,10 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//Klasse der håndterer svømmehold
 public class TrainingTeamManagement {
     static ArrayList<TrainingTeam> holdListe = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
 
+    //Metode der opretter 10 hold, hvis arraylisten er tom
     public static void CreateTeams() {
         if (holdListe.isEmpty()) {
             holdListe.add(new TrainingTeam("Junior", "Crawl"));
@@ -20,7 +22,7 @@ public class TrainingTeamManagement {
         }
     }
 
-
+    //Metode der kan håndtere tilmelding/Afmelding fra hold
     public static void handleMemberTeamAssignment() {
         System.out.print("Søg efter Konkurrencesvømmer eller Træner (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
@@ -56,6 +58,7 @@ public class TrainingTeamManagement {
         }
     }
 
+    //Metode det tilføjer medlem til hold
     private static void addMemberToTeam(Member member) {
         // Vis liste over hold og tillad brugeren at vælge et hold
         System.out.println("Vælg et hold at tilføje medlemmet til:");
@@ -77,6 +80,7 @@ public class TrainingTeamManagement {
         }
     }
 
+    //Metode der fjerner medlem fra hold
     private static void removeMemberFromTeam(Member member) {
         System.out.println("\nVælg et hold som medlemmet skal fjernes fra: ");
         List<TrainingTeam> medlemsHold = new ArrayList<>();
@@ -105,6 +109,7 @@ public class TrainingTeamManagement {
         }
     }
 
+    //Metode der viser hold efter type Junior/senior/motion
     public static void showTeamsByType() {
         System.out.println("Vælg holdtype at vise:");
         System.out.println("1. Vis juniorhold");
@@ -129,6 +134,7 @@ public class TrainingTeamManagement {
         }
     }
 
+    //Metode der viser hold
     private static void showTeams(String teamType) {
         for (TrainingTeam team : holdListe) {
             if (team.getHoldNavn().equalsIgnoreCase(teamType)) {

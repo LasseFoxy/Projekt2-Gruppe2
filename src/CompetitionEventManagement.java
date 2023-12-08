@@ -7,6 +7,7 @@ public class CompetitionEventManagement {
     private static final Scanner scanner = new Scanner(System.in);
     static List<CompetitionEvent> competitionResults = new ArrayList<>();
 
+    //Metode til at håndtere styring af konkurrencebegivenheder
     public static void handleCompetitionEvent() {
         System.out.print("Indtast stævnenavn: ");
         String meetName = scanner.nextLine();
@@ -34,6 +35,7 @@ public class CompetitionEventManagement {
         scanner.nextLine();
     }
 
+    //Metode til at tilføje resultat for svømmer eller flere svømmere
     private static void addSwimmerResults(String meetName, LocalDate meetDate, Member swimmer) {
         boolean addingDisciplines = true;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -122,6 +124,7 @@ public class CompetitionEventManagement {
         }
     }
 
+    //Metode der viser konkurrenceresultater for enten et stævne eller for en deltager.
     public static void searchAnDisplayCompetitionResults() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -157,6 +160,7 @@ public class CompetitionEventManagement {
         scanner.nextLine();
     }
 
+    //Metode til at vise alle bekræftede resultater for netop indtastet stævne
     private static void displayThisCompetitionResults(String meetName, LocalDate meetDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = meetDate.format(formatter);

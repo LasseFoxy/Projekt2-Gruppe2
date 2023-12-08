@@ -6,7 +6,7 @@ import java.util.*;
 public class SearchAndInputMethods {
     private static final Scanner scanner = new Scanner(System.in);
 
-    //Hovedmetode for at søge efter medlemmer med søgekriterier (Se booleans)
+    //Hovedmetode for at søge efter medlemmer med søgekriterier (Se booleans argumenter)
     static List<Member> searchMembers(String searchCriteria, boolean includeSwimmers, boolean includeTrainers, boolean includeCompetitiveSwimmers, boolean searchAllFields) {
         List<Member> foundMembers = new ArrayList<>();
         for (Member member : MemberManagement.membersList) {
@@ -35,7 +35,7 @@ public class SearchAndInputMethods {
     }
 
 
-    //Metode til at søge i alle medlemmer (alle kriterier true)
+    //Metode til at søge i alle medlemmer (alle kriterier/argumenter true)
     static List<Member> searchAllMembers(String searchCriteria) {
         return searchMembers(searchCriteria, true, true, true, true);
     }
@@ -45,6 +45,7 @@ public class SearchAndInputMethods {
         return searchMembers(searchCriteria, false, false, true, false);
     }
 
+    //Metode til at søge efter konkurrencesvømmere og trænere (bruges til hold)
     public static List<Member> searchCompetitionSwimmersAndTrainers(String searchCriteria){
         return searchMembers(searchCriteria, false,true,true,false);
     }
@@ -116,6 +117,7 @@ public class SearchAndInputMethods {
         return payments.get(choice - 1);
     }
 
+    //Metode der indhenter et gyldigt valg fra brugeren
     public static int promptForChoice(Scanner scanner, String prompt, int... validChoices) {
         int choice;
         boolean isValidChoice;
@@ -144,6 +146,7 @@ public class SearchAndInputMethods {
         return choice;
     }
 
+    //Metode der indhenter en gyldig dato fra brugeren
     public static LocalDate promptForDate(Scanner scanner, String prompt) {
         LocalDate date = null;
         while (date == null) {
@@ -158,6 +161,7 @@ public class SearchAndInputMethods {
         return date;
     }
 
+    //Metode der indhenter en gyldig tid i formatet MM:ss:hh fra brugeren
     public static String promptForTime(Scanner scanner, String prompt) {
         String time;
         do {
@@ -174,6 +178,7 @@ public class SearchAndInputMethods {
         return time;
     }
 
+    //Metode der indhenter korrekt tlf nummer (8 cifre) fra brugeren.
     public static String promptForPhoneNumber(Scanner scanner) {
         String phoneNumber = null;
         while (phoneNumber == null) {

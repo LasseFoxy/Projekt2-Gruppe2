@@ -1,6 +1,7 @@
 import java.time.*;
 import java.util.*;
 
+//Klasse til at håndtere medlemmer (Opret, slet, rediger, vis)
 public class MemberManagement {
     private static final Scanner scanner = new Scanner(System.in);
     public static ArrayList<Member> membersList = new ArrayList<>();
@@ -139,6 +140,7 @@ public class MemberManagement {
         }
     }
 
+    //Metode til at redigere oplysninger for et medlem
     private static void editMember(Member member) {
         boolean editing = true;
 
@@ -232,6 +234,7 @@ public class MemberManagement {
         }
     }
 
+    //Metode til at slette medlem
     private static void deleteMember(Member member) {
         System.out.println("Er du sikker på, at du vil slette følgende medlem?");
         System.out.println(member);

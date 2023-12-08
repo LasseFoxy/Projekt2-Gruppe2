@@ -2,7 +2,8 @@ import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 
-//Klasse for årligt kontingentbetaling (inkluderer arrayliste med betalinger betalt/ubetalt/restance)
+/*AnnualPayment klassen repræsenterer medlemskontingentbetalinger og indeholder oplysninger om medlemmet,
+  forfaldsdato, betalingsstatus og beløb.*/
 public class AnnualPayment implements Serializable {
     private final Member member;
     private LocalDate paymentDueDate;
@@ -54,7 +55,7 @@ public class AnnualPayment implements Serializable {
         return amount;
     }
 
-    //To String
+    //To String metode
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

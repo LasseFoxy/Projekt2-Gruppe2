@@ -26,7 +26,6 @@ public class BestTimeManagement {
         );
 
         if (isNewPersonalBest) {
-            // Vis den nye tidsregistrering for brugeren og spørg om bekræftelse
             System.out.println("Ny træningstid registreret: " + discipline + " - " + date + " - " + time);
             int confirm = SearchAndInputMethods.promptForChoice(scanner, "Bekræft tilføjelse af ny tid (1 for Ja, 2 for Nej): ", 1, 2);
 
@@ -56,6 +55,7 @@ public class BestTimeManagement {
         }
     }
 
+    //Metode til håndtering af træningstid
     public static void handleTrainingTime() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
@@ -87,6 +87,7 @@ public class BestTimeManagement {
         }
     }
 
+    //Metode til at vise bedste tider for en svømmer.
     public static void displayBestTimes() {
         System.out.print("Søg efter medlem (Fornavn, Efternavn eller Medlems ID): ");
         String searchCriteria = scanner.nextLine();
@@ -102,7 +103,6 @@ public class BestTimeManagement {
                             .thenComparing(BestTime::getType))
                     .toList();
 
-            // Vis svømmerens tider
             System.out.println("Tidsrekorder for " + selectedSwimmer.getShortInfo() + ":");
             for (BestTime timeRecord : swimmerRecords) {
                 System.out.println(timeRecord.toString());
@@ -117,7 +117,7 @@ public class BestTimeManagement {
     // Metode der tjekker om den nye oplyste tid er en ny personly rekord eller ej
     public static boolean isNewPersonalBest(String firstName, String lastName, int memberID, String discipline, String newTime, BestTime.TimeType newTimeType) {
 
-        // Find existing records for the same swimmer, discipline, and time type
+        //Find tidligere rekorder for svømmeren med disciplin og tidstype
         List<BestTime> existingRecords = swimmerTimes.stream()
                 .filter(timeRecord ->
                         timeRecord.getFirstName().equals(firstName) &&
@@ -127,30 +127,29 @@ public class BestTimeManagement {
                                 timeRecord.getType() == newTimeType)
                 .toList();
 
-        // If no records exist, it's a new personal best
+        // Hvis ingen rekorder eksisterer, registrer som ny bedste tid.
         if (existingRecords.isEmpty()) {
             return true;
         }
 
-        // Compare the new time with existing records
+        // Sammenlign rekorder
         for (BestTime timeRecord : existingRecords) {
             if (compareTimes(newTime, timeRecord.getTime()) >= 0) {
                 return false; // New time is slower or equal to an existing record
             }
         }
 
-        return true; // New time is faster than all existing records
+        return true;
     }
 
     // Hjælpefunktion til at sammenligne to tider i formatet MM:ss:hh
     public static int compareTimes(String time1, String time2) {
-        // Håndter tilfælde, hvor en tid er "Ingen tid registreret"
         if (time1.equals("Ingen tid registreret") && time2.equals("Ingen tid registreret")) {
-            return 0; // Begge tider er ens
+            return 0;
         } else if (time1.equals("Ingen tid registreret")) {
-            return 1; // time2 er hurtigere, fordi time1 ikke har nogen tid
+            return 1;
         } else if (time2.equals("Ingen tid registreret")) {
-            return -1; // time1 er hurtigere, fordi time2 ikke har nogen tid
+            return -1;
         } else {
             // Del tidene op i minutter, sekunder og hundredeler
             String[] parts1 = time1.split(":");
@@ -164,7 +163,7 @@ public class BestTimeManagement {
             int seconds2 = Integer.parseInt(parts2[1]);
             int hundredths2 = Integer.parseInt(parts2[2]);
 
-            // Sammenlign tid1 og tid2 sekventielt (minutter, sekunder, hundredeler)
+            // Sammenlign tid1 og tid2 hver for sig (minutter, sekunder, hundredeler)
             if (minutes1 < minutes2) {
                 return -1;
             } else if (minutes1 > minutes2) {
@@ -179,7 +178,7 @@ public class BestTimeManagement {
     }
 
     public static void displayTop5Swimmers() {
-        // Opret en Comparator for at sammenligne TimeRecords baseret på tid
+        // Opret en Comparator for at sammenligne svømmeres bedste tid (træningstid vs. konkurrence)
         Comparator<BestTime> timeRecordComparator = (record1, record2) -> {
             String time1 = record1.getTime();
             String time2 = record2.getTime();
@@ -198,7 +197,6 @@ public class BestTimeManagement {
             int disciplineIndex = disciplines.indexOf(discipline);
 
             if (disciplineIndex == -1) {
-                // Disciplinen er ikke fundet, tilføj den til listerne
                 disciplines.add(discipline);
                 disciplineTimes.add(new ArrayList<>());
                 disciplineIndex = disciplines.size() - 1;
@@ -244,7 +242,7 @@ public class BestTimeManagement {
             case 2 -> "Rygsvømning";
             case 3 -> "Brystsvømning";
             case 4 -> "Butterfly";
-            default -> null; // Returner null for ugyldige numre
+            default -> null; //
         };
     }
 }

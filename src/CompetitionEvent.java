@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.time.LocalDate;
 
-//Klasse der omhandler konkurrence events
+//Klasse der omhandler konkurrence events med stævnenavn, dato, tid,placering m.fl.
 public class CompetitionEvent implements Serializable {
     private final String meetName;
     private final LocalDate meetDate;

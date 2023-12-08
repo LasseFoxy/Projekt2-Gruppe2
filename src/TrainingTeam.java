@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
+//Klasse der omhandler svømmehold
 public class TrainingTeam implements Serializable {
     private final String holdNavn;
     private final String holdDisciplin;

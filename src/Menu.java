@@ -1,9 +1,11 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
+/*Menuklassen styrer brugergrænsefladen og adgangen til forskellige funktioner
+i programmet ved at præsentere menuer og håndtere brugerinput.*/
 public class Menu {
         private final Scanner scanner = new Scanner(System.in);
 
+        //Hovedmenu
         public void displayMainMenu() {
                 System.out.println();
                 System.out.println("Hovedmenu:");
@@ -15,6 +17,7 @@ public class Menu {
                 System.out.println("0. Annuller ændringer og afslut programmet");
         }
 
+        //Medlemskaber menu
         public void displayMemberMenu() {
                 System.out.println();
                 System.out.println("Medlemskaber:");
@@ -24,6 +27,7 @@ public class Menu {
                 System.out.println("0. Tilbage til hovedmenu");
         }
 
+        //Økonomi menu
         public void displayFinanceMenu() {
                 System.out.println();
                 System.out.println("Økonomi:");
@@ -32,6 +36,7 @@ public class Menu {
                 System.out.println("3. Søg efter kontingentbetalinger/Marker som betalt");
                 System.out.println("0. Tilbage til hovedmenu");
 
+        //Svømmer data menu
         } public void displaySwimmerDataMenu() {
                 System.out.println();
                 System.out.println("Svømmer data:");
@@ -43,6 +48,7 @@ public class Menu {
                 System.out.println("0. Tilbage til hovedmenu");
         }
 
+        //Holdadministration menu
         public void displayTeamManagementMenu() {
                 System.out.println();
                 System.out.println("Holdadministration:");
@@ -51,8 +57,9 @@ public class Menu {
                 System.out.println("0. Tilbage til hovedmenu");
         }
 
+        //Metode der starter menuen
         public void runMenu() {
-                // Kun initialiser testmedlemmer og bedste tider, hvis de ikke allerede eksisterer
+                //Kalder en metode der genererer testmedlemmer og bedste tider, hvis de ikke allerede eksisterer
                 if (MemberManagement.membersList == null || MemberManagement.membersList.isEmpty()) {
                         TestMembers.initializeTestMembers(); // Opretter Testmedlemmer
                 }

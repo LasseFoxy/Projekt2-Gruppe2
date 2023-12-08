@@ -1,10 +1,12 @@
 import java.io.*;
 
 public class DataManager {
-    private static final String DATA_FOLDER = "data"; // Mappe til at gemme datafiler
+    // Mappe til at gemme datafiler
+    private static final String DATA_FOLDER = "data";
 
+    // Metode til at gemme al data
     public static void saveAllData() {
-        createDataFolderIfNeeded(); // Opret data-mappen, hvis den ikke eksisterer
+        createDataFolderIfNeeded();
 
         saveData("members.dat", MemberManagement.membersList);
         saveData("payments.dat", AnnualPaymentManagement.paymentList);
@@ -14,6 +16,7 @@ public class DataManager {
         System.exit(0);
     }
 
+    //Metode til at indlæse gemte filer
     public static void loadAllData() {
         createDataFolderIfNeeded(); // Opret data-mappen, hvis den ikke eksisterer
 
@@ -38,12 +41,13 @@ public class DataManager {
         }
     }
 
+    //Metode der tjekker om en fil eksisterer
     private static boolean fileExists(String fileName) {
         File file = new File(DATA_FOLDER + File.separator + fileName);
         return file.exists();
     }
 
-
+    //Metode der opretter datamappen hvis den ikke eksisterer
     private static void createDataFolderIfNeeded() {
         File dataFolder = new File(DATA_FOLDER);
         if (!dataFolder.exists()) {
@@ -51,6 +55,7 @@ public class DataManager {
         }
     }
 
+    //Metode der gemmer data i en fil
     private static void saveData(String fileName, Object data) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FOLDER + File.separator + fileName))) {
             out.writeObject(data);
@@ -59,6 +64,7 @@ public class DataManager {
         }
     }
 
+    //Metode der indlæser data fra en fil
     @SuppressWarnings("unchecked")
     private static <T> T loadData(String fileName) {
         try {

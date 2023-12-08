@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
-// Medlemsklasse
+// Medlemsklasse som vedrører alle medlemmer (svømmere og trænere)
 public class Member implements Serializable {
 
     private String firstName;

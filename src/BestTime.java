@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-// Klasse der repræsenterer bedste svømmetider med information om medlem, tidstype, disciplin, dato og tid.
+//BestTime Klassen repræsenterer bedste svømmetider med information om medlem, tidstype, disciplin, dato og tid.
 public class BestTime implements Serializable {
     public enum TimeType {
         TRAINING, COMPETITION
@@ -13,7 +13,7 @@ public class BestTime implements Serializable {
     private final TimeType type;
     private final String discipline;
     private final LocalDate date;
-    private final String time; // Tid som en streng i formatet MM:ss.hh
+    private final String time;
 
     //Konstruktør
     public BestTime(TimeType type, String discipline, LocalDate date, String time, String firstName, String lastName, int memberID) {
@@ -52,6 +52,7 @@ public class BestTime implements Serializable {
         return time;
     }
 
+    //To String metode
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

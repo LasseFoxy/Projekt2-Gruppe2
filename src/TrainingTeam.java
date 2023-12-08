@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class TrainingTeam {
+public class TrainingTeam implements Serializable {
     private final String holdNavn;
     private final String holdDisciplin;
     private final ArrayList<Member> medlemmer; // Liste af medlemmer, herunder trænere og svømmere

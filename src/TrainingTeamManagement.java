@@ -3,19 +3,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TrainingTeamManagement {
-    private static final ArrayList<TrainingTeam> holdListe = new ArrayList<>();
+    static ArrayList<TrainingTeam> holdListe = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void CreateTeams() {
-        holdListe.add(new TrainingTeam("Junior", "Crawl"));
-        holdListe.add(new TrainingTeam("Junior", "Rygsvømning"));
-        holdListe.add(new TrainingTeam("Junior", "Brystsvømning"));
-        holdListe.add(new TrainingTeam("Junior", "Butterfly"));
-        holdListe.add(new TrainingTeam("Senior", "Crawl"));
-        holdListe.add(new TrainingTeam("Senior", "Rygsvømning"));
-        holdListe.add(new TrainingTeam("Senior", "Brystsvømning"));
-        holdListe.add(new TrainingTeam("Senior", "Butterfly"));
-        holdListe.add(new TrainingTeam("Motion", "Fælleshold"));
+        if (holdListe.isEmpty()) {
+            holdListe.add(new TrainingTeam("Junior", "Crawl"));
+            holdListe.add(new TrainingTeam("Junior", "Rygsvømning"));
+            holdListe.add(new TrainingTeam("Junior", "Brystsvømning"));
+            holdListe.add(new TrainingTeam("Junior", "Butterfly"));
+            holdListe.add(new TrainingTeam("Senior", "Crawl"));
+            holdListe.add(new TrainingTeam("Senior", "Rygsvømning"));
+            holdListe.add(new TrainingTeam("Senior", "Brystsvømning"));
+            holdListe.add(new TrainingTeam("Senior", "Butterfly"));
+            holdListe.add(new TrainingTeam("Motion", "Fælleshold"));
+        }
     }
 
 

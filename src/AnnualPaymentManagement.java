@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class AnnualPaymentManagement {
     private static final Scanner scanner = new Scanner(System.in);
-    public static final ArrayList<AnnualPayment> paymentList = new ArrayList<>();
+    public static ArrayList<AnnualPayment> paymentList = new ArrayList<>();
 
     // Metode til at oprette regning for første kontingentbetaling (betalingsdato = et år efter dato for oprettelse af svømmeren)
     public static void createInitialPayment(Member member) {

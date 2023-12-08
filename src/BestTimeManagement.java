@@ -63,7 +63,7 @@ public class BestTimeManagement {
         Member selectedMember = SearchAndInputMethods.selectMemberFromList(foundMembers);
 
         if (selectedMember != null) {
-            System.out.println("Valgt medlem:");
+            System.out.println("\nValgt medlem:");
             System.out.println(selectedMember.getShortInfo());
 
             System.out.println("Tast 1 for Crawl");

@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 
 //Klasse der omhandler konkurrence events
-public class CompetitionEvent {
+public class CompetitionEvent implements Serializable {
     private final String meetName;
     private final LocalDate meetDate;
     private final String swimmerName;

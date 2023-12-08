@@ -3,7 +3,8 @@ import java.util.*;
 
 public class MemberManagement {
     private static final Scanner scanner = new Scanner(System.in);
-    public static final ArrayList<Member> membersList = new ArrayList<>();
+    public static ArrayList<Member> membersList = new ArrayList<>();
+
 
     //Metode til at indsamle Stamdata (Fornavn, Efternavn, Fødselsdato, Telefonnummer, E-mail)
     public static Member gatherBasicMemberInfo() {

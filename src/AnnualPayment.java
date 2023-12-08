@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 
 //Klasse for årligt kontingentbetaling (inkluderer arrayliste med betalinger betalt/ubetalt/restance)
-public class AnnualPayment {
+public class AnnualPayment implements Serializable {
     private final Member member;
     private LocalDate paymentDueDate;
     private boolean isPaid;

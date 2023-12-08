@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
@@ -10,7 +11,8 @@ public class Menu {
                 System.out.println("2. Økonomi");
                 System.out.println("3. Svømmer data");
                 System.out.println("4. Holdadministration");
-                System.out.println("0. Afslut");
+                System.out.println("5. Gem ændringer");
+                System.out.println("0. Afslut programmet");
         }
 
         public void displayMemberMenu() {
@@ -50,9 +52,10 @@ public class Menu {
         }
 
         public void runMenu() {
-                DataManager.loadAllData();
                 TestMembers.initializeTestMembers(); //Opretter Testmedlemmer
                 TestMembers.generateTimesForCompetitiveSwimmers(); //Generer "Bedste tider" for konkurrencesvømmere
+                DataManager.loadAllData();
+
                 boolean running = true;
 
                 while (running) {
@@ -74,6 +77,9 @@ public class Menu {
 
                                 case "4":
                                         runTeamManagementMenu();
+                                        break;
+                                case "5":
+                                        DataManager.saveAllData();
                                         break;
                                 case "0":
                                         running = false;

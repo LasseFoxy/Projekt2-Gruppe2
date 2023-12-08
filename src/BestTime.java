@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 // Klasse der repræsenterer bedste svømmetider med information om medlem, tidstype, disciplin, dato og tid.
-public class BestTime {
+public class BestTime implements Serializable {
     public enum TimeType {
         TRAINING, COMPETITION
     }

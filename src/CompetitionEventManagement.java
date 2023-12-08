@@ -5,7 +5,7 @@ import java.util.*;
 //Klasse med metoder der vedrører konkurrence events
 public class CompetitionEventManagement {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final List<CompetitionEvent> competitionResults = new ArrayList<>();
+    static List<CompetitionEvent> competitionResults = new ArrayList<>();
 
     public static void handleCompetitionEvent() {
         System.out.print("Indtast stævnenavn: ");

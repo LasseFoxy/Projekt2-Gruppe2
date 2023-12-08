@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 // Medlemsklasse
-public class Member {
+public class Member implements Serializable {
 
     private String firstName;
     private String lastName;
@@ -95,7 +96,9 @@ class Trainer extends Member {
     }
 
     // Getters og setters specifikke for trænere
+    public String getPosition(){return position;}
     public void setPosition(String position) { this.position = position; }
+
 
     //To String tilføjelse for trænere
     @Override
